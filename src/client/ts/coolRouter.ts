@@ -1,6 +1,5 @@
-import LobbyPage from './dom/pages/lobby/lobbyPage'
 import CoolPage from './dom/pages/coolPage'
-import FightPage from './dom/pages/fight/fightPage'
+import GamePage from './dom/pages/game/gamePage'
 
 type Route = {
   def: Array<string | number>,
@@ -8,9 +7,9 @@ type Route = {
 }
 
 const ROUTES: Route[] = [
-  {
-    def: ['fight', 0], PageType: FightPage
-  }
+  // {
+  //   def: ['fight', 0], PageType: FightPage
+  // }
 ]
 
 export async function loadCoolPage(): Promise<HTMLElement>{
@@ -24,7 +23,7 @@ export async function loadCoolPage(): Promise<HTMLElement>{
       error = typeof ex === 'string' ? ex : ''
     }
   }
-  const defaultPage = new LobbyPage(error)
+  const defaultPage = new GamePage(error)
   await defaultPage.load()
   return defaultPage
 }

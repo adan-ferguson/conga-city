@@ -2,7 +2,7 @@ import CoolPage from '../coolPage'
 
 export default class GamePage extends CoolPage{
   static get tagName(){
-    return 'c-fight-page'
+    return 'c-game-page'
   }
 
   async load(){
