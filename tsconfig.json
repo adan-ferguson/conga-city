@@ -17,6 +17,7 @@
     "outDir": "./ts_dist"
   },
   "include": [
-    "src/server"
+    "server",
+    "shared"
   ]
 }

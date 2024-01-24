@@ -7,6 +7,10 @@ export default abstract class CoolElement extends HTMLElement{
     customElements.define(this.tagName, this)
   }
 
+  static asHTML(){
+    return `<${this.tagName}></${this.tagName}>`
+  }
+
   static get tagName(): string{ throw 'Not implemented' }
   static get initialHTML(): string{ return '' }
   static get defaultClass(): string{ return '' }

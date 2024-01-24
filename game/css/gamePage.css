@@ -1,0 +1,4 @@
+c-game-page {
+    display: grid;
+    grid-template-rows: auto 12% 8%;
+}

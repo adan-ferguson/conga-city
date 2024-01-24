@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "NodeNext",
+    "module": "es2022",
     "moduleResolution": "Bundler",
     "strict": true,
     "resolveJsonModule": true,
