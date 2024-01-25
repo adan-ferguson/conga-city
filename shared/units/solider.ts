@@ -1,9 +1,9 @@
-import type { UnitDef } from '../unit'
+import { UnitBaseDef } from '../unit'
 
-const soldierUnit: UnitDef = {
-  type: 'soldier',
+const soldier: UnitBaseDef = {
+  name: 'Soldier',
   atk: 2,
   hp: 2,
 }
 
-export { soldierUnit }
+export { soldier }

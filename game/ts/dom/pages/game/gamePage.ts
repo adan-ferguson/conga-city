@@ -1,7 +1,7 @@
 import CoolPage from '../coolPage'
-import GameInstance from '../../../../../shared/gameInstance'
 import Battlefield from '../../battlefield'
 import '../../../../css/gamePage.css'
+import { createNewGameInstance, GameInstance } from '../../../../../shared/game'
 
 export default class GamePage extends CoolPage{
 
@@ -41,14 +41,14 @@ export default class GamePage extends CoolPage{
         return false
       }
       const { def, state } = JSON.parse(activeGame)
-      return new GameInstance(def, state)
+      return { def, state }
     }catch(ex){
       return false // Error while loading
     }
   }
 
   _newGame(){
-    return GameInstance.createNew()
+    return createNewGameInstance()
   }
 }
 

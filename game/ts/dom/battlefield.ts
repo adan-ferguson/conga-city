@@ -1,5 +1,5 @@
 import CoolElement from './coolElement'
-import { GameInstance } from '../../../shared/gameInstance'
+import { GameInstance } from '../../../shared/game'
 
 export default class Battlefield extends CoolElement{
 
