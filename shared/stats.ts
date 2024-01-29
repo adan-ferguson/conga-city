@@ -8,7 +8,7 @@ export interface Stats {
 
 export type StatName = keyof Stats
 
-export function getStat(game: GameInstance, unit: UnitInstance, statName: StatName): number{
+export function getStat(_: GameInstance, unit: UnitInstance, statName: StatName): number{
   const baseDef: UnitBaseDef = toUnitBaseDef(unit.def)
   return baseDef.stats[statName] ?? 0
 }

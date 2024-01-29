@@ -2,8 +2,9 @@ html, body, #app {
     margin: 0;
     width: 100%;
     height: 100%;
-    background-image: url('./assets/45-degree-fabric-light.png');
+    background-image: url('./game/assets/45-degree-fabric-light.png');
     background-color: #424242;
+    font-size: min(24px, 4vh);
 }
 
 #app {
@@ -13,12 +14,45 @@ html, body, #app {
     justify-content: center;
     overflow: hidden;
 
-    @media (max-aspect-ratio: 1920/1080) {
+    @media (max-aspect-ratio: 1500/900) {
         flex-direction: column;
     }
 
     &> * {
         background-color: #464646;
-        aspect-ratio: 1920/1080;
+        aspect-ratio: 1500/900;
+    }
+}
+
+html, textarea, input, button {
+    font-family: monospace;
+
+    background-color: #1e1e1e;
+    color: white;
+
+    & a:link {
+        color: lightskyblue;
+    }
+
+    & a:visited {
+        color: #a871da;
+    }
+
+    & a:hover {
+        color: #ffffff;
+    }
+
+    & a:active {
+        color: #ff4040;
+        text-decoration: none;
+        font-weight: normal;
+    }
+}
+
+button {
+    cursor: pointer;
+    font-size: 1rem;
+    &:hover {
+        background-color: #475657;
     }
 }

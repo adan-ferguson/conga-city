@@ -1,0 +1,9 @@
+.flex-cols {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-centered {
+  align-items: center;
+  justify-content: space-evenly;
+}

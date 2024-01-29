@@ -1,4 +1,5 @@
 import { EventEmitter } from 'eventemitter3'
+import CoolPage from './pages/coolPage'
 
 export default abstract class CoolElement extends HTMLElement{
 
@@ -26,6 +27,10 @@ export default abstract class CoolElement extends HTMLElement{
     if(CLS.defaultClass){
       this.classList.add(...CLS.defaultClass.split(' '))
     }
+  }
+
+  get parentPage(): CoolPage | undefined{
+    return this.closest('.cool-page') as CoolPage
   }
 
   emit(eventName: string, ...args: unknown[]){

@@ -11,6 +11,6 @@ export interface ScenarioWeek {
   army: UnitDef[]
 }
 
-export function getScenarioInfo(type: ScenarioType): Scenario{
+export function getScenarioInfo(_: ScenarioType): Scenario{
   return testScenario
 }

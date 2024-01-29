@@ -11,6 +11,7 @@ export type SlotNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 export type GameState = {
   day: number,
   week: number,
+  wallDamage: number,
   playerArmy: UnitInstance[],
   invaderArmy: UnitInstance[],
 }
@@ -27,24 +28,30 @@ export function createNewGameInstance(): GameInstance{
     state: {
       day: 1,
       week: 1,
+      wallDamage: 0,
       playerArmy: [],
       invaderArmy: loadInvaderArmy(scenario, 1)
     }
   }
 }
 
-function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstance[]{
-  const def: Scenario = getScenarioInfo(scenario)
-  return def.weeks[week].army.map(unitDef => {
-    return { def: unitDef }
-  })
-}
-
-function endDay(game: GameInstance){
+export function endDay(game: GameInstance){
+  debugger
   resolveCombat(game)
   // TODO: other stuff
   if(game.state.day === 7){
     game.state.week += 1
   }
   game.state.day = (game.state.day + 1) % 7
+}
+
+function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstance[]{
+  const def: Scenario = getScenarioInfo(scenario)
+  const army = def.weeks[week - 1]?.army
+  if(!army){
+    throw 'No army!'
+  }
+  return army.map(unitDef => {
+    return { def: unitDef, state: { damage: 0 } }
+  })
 }

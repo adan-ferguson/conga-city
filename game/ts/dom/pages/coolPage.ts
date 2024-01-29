@@ -5,6 +5,7 @@ export default abstract class CoolPage extends CoolElement{
   abstract load(): Promise<unknown>
   constructor(args: string | string[]){
     super()
+    this.classList.add('cool-page')
     this._args = Array.isArray(args) ? args : [args]
   }
   get args(){

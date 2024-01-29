@@ -1,7 +1,8 @@
 import CoolPage from '../coolPage'
-import Battlefield from '../../battlefield'
+import Battlefield from './battlefield'
 import '../../../../css/gamePage.css'
 import { createNewGameInstance, GameInstance } from '../../../../../shared/game'
+import Calendar from './calendar'
 
 export default class GamePage extends CoolPage{
 
@@ -17,17 +18,28 @@ export default class GamePage extends CoolPage{
 <div class="battlefield-section">
   ${Battlefield.asHTML()}
 </div>
-<div class="calendar-section"></div>
+<div class="calendar-section">
+  ${Calendar.asHTML()}
+</div>
     `
+  }
+
+  get gameInstance(){
+    return this._gameInstance
   }
 
   get battlefield(): Battlefield{
     return this.querySelector<Battlefield>(Battlefield.tagName)!
   }
 
+  get calendar(): Calendar{
+    return this.querySelector<Calendar>(Calendar.tagName)!
+  }
+
   async load(){
     this._gameInstance = this._initGameInstance()
-    this.battlefield.gameInstance = this._gameInstance
+    this.battlefield.update()
+    this.calendar.update()
   }
 
   _initGameInstance(){

@@ -14,7 +14,7 @@ export type UnitDef = {
 } | UnitBaseType
 
 export interface UnitState {
-  hp: number
+  damage: number
 }
 
 export interface UnitInstance {
