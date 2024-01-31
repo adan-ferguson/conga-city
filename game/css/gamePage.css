@@ -1,9 +1,0 @@
-c-game-page {
-    display: grid;
-    grid-template-rows: auto min(6rem, 18%) min(4rem, 12%);
-    align-items: center;
-}
-
-c-calendar {
-    gap: 20px;
-}

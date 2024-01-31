@@ -2,25 +2,30 @@
   "name": "conga-city",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "nodemon -w server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx server/main.ts",
     "build": "vite build"
   },
   "devDependencies": {
+    "@tsconfig/svelte": "^5.0.2",
     "@types/express": "^4.17.15",
     "@types/node": "^20.9.3",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
+    "eslint-plugin-svelte": "^2.35.1",
     "nodemon": "^3.0.1",
-    "vite": "^5.0.2"
+    "svelte": "^4.2.9"
   },
   "dependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "eventemitter3": "^5.0.1",
     "express": "^4.18.2",
     "tsx": "^4.5.0",
     "typescript": "^5.3.2",
+    "vite": "^5.0.12",
     "vite-express": "*"
   }
 }

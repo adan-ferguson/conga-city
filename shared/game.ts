@@ -1,6 +1,7 @@
-import type { UnitInstance } from './unit'
-import { getScenarioInfo, Scenario, ScenarioType } from './scenario'
+import type { UnitInstance } from './units/unit'
+import { getScenarioInfo, type Scenario, type ScenarioType } from './scenario'
 import { resolveCombat } from './combat'
+import type { UnitInstanceDef } from './units/unit'
 
 export type GameDef = {
   scenario: ScenarioType
@@ -8,12 +9,23 @@ export type GameDef = {
 
 export type SlotNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 
+export enum Team {
+  Player,
+  Invader,
+}
+
+export function otherTeam(team: Team): Team{
+  return (team + 1) % 2
+}
+
 export type GameState = {
   day: number,
   week: number,
   wallDamage: number,
-  playerArmy: UnitInstance[],
-  invaderArmy: UnitInstance[],
+  armies: {
+    [Team.Player]: UnitInstanceDef[],
+    [Team.Invader]: UnitInstanceDef[],
+  }
 }
 
 export type GameInstance = {
@@ -29,8 +41,10 @@ export function createNewGameInstance(): GameInstance{
       day: 1,
       week: 1,
       wallDamage: 0,
-      playerArmy: [],
-      invaderArmy: loadInvaderArmy(scenario, 1)
+      armies: [
+        [],
+        loadInvaderArmy(scenario, 1),
+      ]
     }
   }
 }
@@ -45,7 +59,17 @@ export function endDay(game: GameInstance){
   game.state.day = (game.state.day + 1) % 7
 }
 
-function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstance[]{
+export function getArmy(game: GameInstance, team: Team): UnitInstance[]{
+  return game.state.armies[team].map<UnitInstance>(uid => {
+    return {
+      ...uid,
+      game,
+      team,
+    }
+  })
+}
+
+function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstanceDef[]{
   const def: Scenario = getScenarioInfo(scenario)
   const army = def.weeks[week - 1]?.army
   if(!army){

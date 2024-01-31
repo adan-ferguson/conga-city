@@ -8,7 +8,8 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		'plugin:svelte/recommended'
 	],
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
@@ -18,6 +19,15 @@ module.exports = {
 		sourceType: 'module',
 		ecmaVersion: 2020
 	},
+	"overrides": [
+		{
+			"files": ["*.svelte"],
+			"parser": "svelte-eslint-parser",
+			"parserOptions": {
+				"parser": "@typescript-eslint/parser" // <-- you HAVE TO say typescript here again
+			}
+		}
+	],
 	rules: {
 		quotes: [
 			'error',
@@ -36,7 +46,7 @@ module.exports = {
 			'error',
 			'always'
 		],
-		'no-unused-vars': ["error", { "args": "none" }],
+		'no-unused-vars': ["error", { "argsIgnorePattern": "^_" }],
 		'space-before-blocks': ['error', 'never'],
 		indent: ['error', 2]
 	}

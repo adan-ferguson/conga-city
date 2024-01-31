@@ -1,11 +1,8 @@
 import '../css/style.css'
 import '../css/common.css'
-import { loadCoolPage } from './coolRouter'
+import App from '../svelte/App.svelte'
 
 const appEl = document.querySelector<HTMLElement>('#app')!
-appEl.innerHTML = 'Loading'
-
-loadCoolPage().then((page: HTMLElement) => {
-  appEl.innerHTML = ''
-  appEl.append(page)
+new App({
+  target: appEl
 })

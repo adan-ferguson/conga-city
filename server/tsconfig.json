@@ -13,10 +13,9 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "outDir": "./ts_dist"
+    "outDir": "../ts_dist"
   },
   "include": [
-    "server",
-    "shared"
+    ""
   ]
 }

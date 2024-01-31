@@ -1,4 +1,4 @@
-import { UnitDef } from './unit'
+import type { UnitDef } from './units/unit'
 import { testScenario } from './scenarios/testScenario'
 
 export type ScenarioType = 'testScenario'
