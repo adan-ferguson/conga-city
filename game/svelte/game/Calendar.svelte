@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
   import { combatRounds } from '../../../shared/combat'
+  import { endDay } from '../../../shared/game'
 
 </script>
 
@@ -11,7 +12,7 @@
   <span class="rounds">
     Rounds: { combatRounds($gameInstance) }
   </span>
-  <button>End Day</button>
+  <button on:click={() => endDay($gameInstance)}>End Day</button>
 </div>
 
 <style>

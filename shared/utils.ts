@@ -3,5 +3,5 @@ export function deepClone<T>(obj: T): T{
 }
 
 export function fillArray<T>(length: number, cb: () => T){
-  return new Array(length).map(cb)
+  return new Array(length).fill(1).map(cb)
 }

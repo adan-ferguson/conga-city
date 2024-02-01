@@ -42,6 +42,7 @@ module.exports = {
 			'never'
 		],
 		'no-console': 'off',
+		'svelte/no-at-html-tags': 'off',
 		'object-curly-spacing': [
 			'error',
 			'always'

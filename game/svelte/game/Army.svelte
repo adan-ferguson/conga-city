@@ -6,8 +6,23 @@
   const army = getArmy($gameInstance, team)
 </script>
 
-<div>
+<div class:left-side={team === Team.Player}>
   {#each army as unitInstance}
     <Unit {unitInstance}/>
   {/each}
 </div>
+
+<style>
+  div {
+    display: flex;
+    overflow: hidden;
+    gap: 0.5vh;
+    align-items: center;
+    & > * {
+      flex: 0 1 12.5%;
+    }
+    &.left-side {
+      flex-direction: row-reverse;
+    }
+  }
+</style>

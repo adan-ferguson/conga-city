@@ -14,8 +14,8 @@ export function resolveCombat(game: GameInstance){
   const atks: Attack[] = []
   for(let i = 0; i < combatRounds(game); i++){
     for(let j = 0; j < 8; j++){
-      tryAttack(game, atks, Team.Player, i as SlotNumber)
-      tryAttack(game, atks, Team.Invader, i as SlotNumber)
+      tryAttack(game, atks, Team.Player, j as SlotNumber)
+      tryAttack(game, atks, Team.Invader, j as SlotNumber)
     }
     resolveAttacks(game, atks)
     removeDestroyedUnits(game)
@@ -84,7 +84,7 @@ function removeDestroyedUnits(game: GameInstance){
 }
 
 function combatEnded(game: GameInstance): boolean{
-  if(game.state.wallDamage > wallMaxHealth(game)){
+  if(!wallHealth(game)){
     return true
   }else if(!game.state.armies[Team.Invader].length){
     return true
@@ -92,6 +92,14 @@ function combatEnded(game: GameInstance): boolean{
   return false
 }
 
-function wallMaxHealth(_: GameInstance){
+export function wallMaxHealth(_: GameInstance){
   return 50
+}
+
+export function wallDamage(game: GameInstance){
+  return Math.max(0, game.state.wallDamage)
+}
+
+export function wallHealth(game: GameInstance){
+  return Math.max(wallMaxHealth(game) - wallDamage(game), 0)
 }

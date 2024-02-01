@@ -16,7 +16,7 @@
     height: 100%;
     background-color: #424242;
     display: grid;
-    grid-template-rows: auto min(6rem, 18%) min(4rem, 12%);
-    align-items: center;
+    grid-template-rows: auto 12% 8%;
+    align-items: stretch;
   }
 </style>
