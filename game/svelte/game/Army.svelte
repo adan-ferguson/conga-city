@@ -1,14 +1,14 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import Unit from './Unit.svelte'
   import { getArmy, Team } from '../../../shared/game'
+  import UnitInstance from './UnitInstance.svelte'
   export let team: Team
   const army = getArmy($gameInstance, team)
 </script>
 
 <div class:left-side={team === Team.Player}>
   {#each army as unitInstance}
-    <Unit {unitInstance}/>
+    <UnitInstance {unitInstance}/>
   {/each}
 </div>
 

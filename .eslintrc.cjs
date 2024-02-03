@@ -47,7 +47,8 @@ module.exports = {
 			'error',
 			'always'
 		],
-		'no-unused-vars': ["error", { "argsIgnorePattern": "^_" }],
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": "error",
 		'space-before-blocks': ['error', 'never'],
 		indent: ['error', 2]
 	}

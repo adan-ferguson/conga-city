@@ -2,6 +2,8 @@ import type { UnitInstance } from './units/unit'
 import { getScenarioInfo, type Scenario, type ScenarioType } from './scenario'
 import { resolveCombat } from './combat'
 import type { UnitInstanceDef } from './units/unit'
+import { deepClone, uniqueID } from './utils'
+import { wallHealth } from './units/unitInstance'
 
 export type GameDef = {
   scenario: ScenarioType
@@ -49,14 +51,24 @@ export function createNewGameInstance(): GameInstance{
   }
 }
 
-export function endDay(game: GameInstance){
-  debugger
-  resolveCombat(game)
+export function endDay(g: GameInstance){
+  if(gameOver(g)){
+    return
+  }
+  const game = deepClone(resolveCombat(g))
   // TODO: other stuff
   if(game.state.day === 7){
     game.state.week += 1
   }
-  game.state.day = (game.state.day + 1) % 7
+  game.state.day = 1 + (game.state.day % 7)
+  return game
+}
+
+export function gameOver(game: GameInstance): boolean{
+  if(wallHealth(game) <= 0){
+    return true
+  }
+  return false
 }
 
 export function getArmy(game: GameInstance, team: Team): UnitInstance[]{
@@ -76,6 +88,6 @@ function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstanceDef[
     throw 'No army!'
   }
   return army.map(unitDef => {
-    return { def: unitDef, state: { damage: 0 } }
+    return { id: uniqueID(), def: unitDef, state: { damage: 0 } }
   })
 }

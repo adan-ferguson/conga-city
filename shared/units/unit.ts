@@ -3,9 +3,15 @@ import type { GameInstance, Team } from '../game'
 
 export type UnitBaseType = 'soldier'
 
+export interface UnitStats extends Stats {
+  atk: number,
+  hp: number,
+  price: number,
+}
+
 export type UnitDef = {
   name: string,
-  stats: Stats,
+  stats: UnitStats,
 }
 
 export interface UnitState {
@@ -13,11 +19,13 @@ export interface UnitState {
 }
 
 export interface UnitInstanceDef {
+  id: string,
   def: UnitDef,
   state: UnitState,
 }
 
 export interface UnitInstance {
+  id: string,
   def: UnitDef,
   state: UnitState,
   game: GameInstance,

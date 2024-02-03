@@ -1,16 +1,17 @@
 <script lang="ts">
-  import type { UnitInstance } from '../../../shared/units/unit'
-  import { getStat } from '../../../shared/stats'
   import Icon from '../Icon.svelte'
 
-  export let unitInstance: UnitInstance
+  export let atk: number
+  export let hp: number
+
+
 </script>
 
 <div class="base flex-rows flex-centered">
   <div class="unit-image"></div>
   <div class="stats flex-cols flex-centered">
-    <Icon val={getStat(unitInstance, 'atk')} type="sword"/>
-    <Icon val={getStat(unitInstance, 'hp')} type="heart"/>
+    <Icon val={atk} type="sword"/>
+    <Icon val={hp} type="heart"/>
   </div>
 </div>
 

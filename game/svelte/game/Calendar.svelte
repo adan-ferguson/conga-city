@@ -1,18 +1,19 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
   import { combatRounds } from '../../../shared/combat'
-  import { endDay } from '../../../shared/game'
-
+  import { endDay, gameOver } from '../../../shared/game'
 </script>
 
 <div class="flex-cols flex-centered">
   <span class="day-and-week">
-    Day { $gameInstance.state.day }, Week { $gameInstance.state.week }
+    Week { $gameInstance.state.week }, Day { $gameInstance.state.day }
   </span>
   <span class="rounds">
     Rounds: { combatRounds($gameInstance) }
   </span>
-  <button on:click={() => endDay($gameInstance)}>End Day</button>
+  <button
+    disabled={gameOver($gameInstance)}
+    on:click={() => gameInstance.set(endDay($gameInstance))}>End Day</button>
 </div>
 
 <style>
