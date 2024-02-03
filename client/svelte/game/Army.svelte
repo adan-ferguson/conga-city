@@ -1,6 +1,6 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import { getArmy, Team } from '../../../shared/game'
+  import { getArmy, Team } from '../../../game/game'
   import UnitInstance from './UnitInstance.svelte'
   export let team: Team
   const army = getArmy($gameInstance, team)

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import { combatRounds } from '../../../shared/combat'
-  import { endDay, gameOver } from '../../../shared/game'
+  import { combatRounds } from '../../../game/combat'
+  import { endDay, gameOver } from '../../../game/game'
 </script>
 
 <div class="flex-cols flex-centered">

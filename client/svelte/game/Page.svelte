@@ -4,7 +4,7 @@
   import Town from './Town.svelte'
 </script>
 
-<div>
+<div class="page">
   <Town></Town>
   <Battlefield></Battlefield>
   <Calendar></Calendar>
@@ -12,11 +12,8 @@
 
 <style>
   div {
-    width: 100%;
-    height: 100%;
-    background-color: #424242;
     display: grid;
-    grid-template-rows: auto 12% 8%;
+    grid-template-rows: 80% 12% 8%;
     align-items: stretch;
   }
 </style>

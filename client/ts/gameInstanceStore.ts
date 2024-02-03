@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'
-import type { GameInstance } from '../../shared/game'
-import { createNewGameInstance } from '../../shared/game'
+import type { GameInstance } from '../../game/game'
+import { createNewGameInstance } from '../../game/game'
 
 export const gameInstance = writable<GameInstance>(undefined, set => {
   set(createNewGameInstance())

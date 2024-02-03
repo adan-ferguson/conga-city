@@ -17,13 +17,15 @@
 
 <style>
   div.base {
-    height: 100%;
+    height: 3rem;
+    width: 2rem;
   }
   .stats {
     font-size: 0.6em;
   }
   div.unit-image {
     border: 0.1rem solid white;
-    aspect-ratio: 1/1;
+    height: 2em;
+    width: 2rem;
   }
 </style>

@@ -5,3 +5,9 @@ import UnitShop from './UnitShop.svelte'
 <div>
   <UnitShop/>
 </div>
+
+<style>
+  div {
+    overflow: hidden
+  }
+</style>
