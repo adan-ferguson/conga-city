@@ -1,4 +1,5 @@
-import type { UnitInstance, UnitStats } from './units/unit'
+import type { UnitStats } from './units/unit'
+import type { UnitInstance } from './units/unitInstance'
 
 const DEFS = {
   atk: { type: 'integer', min: 0 },

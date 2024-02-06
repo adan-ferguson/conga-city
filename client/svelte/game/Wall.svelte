@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import { wallHealth } from '../../../game/units/unitInstance'
+
+  import { wallHealth } from '../../../game/game'
 </script>
 
 <div>

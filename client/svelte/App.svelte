@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type {ComponentType} from 'svelte'
-  import {loadCoolPage} from '../ts/coolRouter'
+  import type { ComponentType } from 'svelte'
+  import { loadCoolPage } from '../ts/coolRouter'
 
   let currentPage: ComponentType | undefined
 

@@ -1,6 +1,6 @@
+import '../css/reset.css'
 import '../css/style.css'
 import '../css/common.css'
-import '../css/reset.css'
 import App from '../svelte/App.svelte'
 
 const appEl = document.querySelector<HTMLElement>('#app')!

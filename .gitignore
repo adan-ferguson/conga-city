@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 ts_dist
+
+tests/**/*.js
+
+server_dist

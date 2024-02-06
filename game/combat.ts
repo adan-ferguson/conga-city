@@ -1,9 +1,9 @@
 import type { GameInstance, SlotNumber } from './game'
-import type { UnitInstance } from './units/unit'
 import { getStat } from './stats'
-import { getArmy, otherTeam, Team } from './game'
-import { getSlot, wallHealth, wallMaxHealth } from './units/unitInstance'
+import { getUnitInstance, wallHealth, wallMaxHealth } from './game'
+import { getSlot, type UnitInstance } from './units/unitInstance'
 import { deepClone } from './utils'
+import { otherTeam, type Team, TeamTypes } from './team'
 
 type Target = UnitInstance | 'wall'
 
@@ -17,8 +17,8 @@ export function resolveCombat(g: GameInstance): GameInstance{
   for(let i = 0; i < combatRounds(game); i++){
     const atks: Attack[] = []
     for(let j = 0; j < 8; j++){
-      tryAttack(game, atks, Team.Player, j as SlotNumber)
-      tryAttack(game, atks, Team.Invader, j as SlotNumber)
+      tryAttack(game, atks, 'player', j as SlotNumber)
+      tryAttack(game, atks, 'invader', j as SlotNumber)
     }
     resolveAttacks(atks)
     removeDestroyedUnits(game)
@@ -34,7 +34,7 @@ export function combatRounds(game: GameInstance){
 }
 
 function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNumber){
-  const attacker = getUnit(game, team, slot)
+  const attacker = getUnitInstance(game, team, slot)
   if(!attacker){
     return
   }
@@ -56,7 +56,7 @@ function getAttackTarget(attacker: UnitInstance): Target | false{
   }
   const enemyArmy = attacker.game.state.armies[otherTeam(attacker.team)]
   if(!enemyArmy.length){
-    if(attacker.team === Team.Player){
+    if(attacker.team === 'player'){
       return false
     }else{
       return 'wall'
@@ -96,12 +96,8 @@ function takeDamage(target: UnitInstance, damage: number){
   target.state.damage = Math.min(getStat(target, 'hp'), target.state.damage + damage)
 }
 
-function getUnit(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance{
-  return getArmy(game, team)[slot]
-}
-
 function removeDestroyedUnits(game: GameInstance){
-  for(const team of [Team.Player, Team.Invader]){
+  for(const team of TeamTypes){
     game.state.armies[team] = game.state.armies[team].filter(uid => {
       const ui: UnitInstance = {
         ...uid,
@@ -116,7 +112,7 @@ function removeDestroyedUnits(game: GameInstance){
 function combatEnded(game: GameInstance): boolean{
   if(!wallHealth(game)){
     return true
-  }else if(!game.state.armies[Team.Invader].length){
+  }else if(!game.state.armies.invader.length){
     return true
   }
   return false

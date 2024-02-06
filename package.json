@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon -w server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx server/main.ts",
-    "build": "vite build"
+    "build": "vite build",
+    "tests": "npx tsc --project ./server/tsconfig.json && npx mocha --recursive ./server_dist/tests/**/*.js"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.2",
@@ -16,6 +17,7 @@
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
+    "eslint-plugin-mocha": "^10.2.0",
     "eslint-plugin-svelte": "^2.35.1",
     "nodemon": "^3.0.1",
     "svelte": "^4.2.9"

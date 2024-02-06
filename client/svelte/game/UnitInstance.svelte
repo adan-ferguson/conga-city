@@ -1,8 +1,7 @@
 <script lang="ts">
     import UnitVisualization from './UnitVisualization.svelte'
     import { getStat } from '../../../game/stats'
-    import type { UnitInstance } from '../../../game/units/unit'
-    import { getHp } from '../../../game/units/unitInstance'
+    import { getHp, type UnitInstance } from '../../../game/units/unitInstance'
 
     export let unitInstance: UnitInstance
 </script>

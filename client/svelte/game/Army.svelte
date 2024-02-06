@@ -1,12 +1,13 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import { getArmy, Team } from '../../../game/game'
+  import { gameUnitInstances } from '../../../game/game'
   import UnitInstance from './UnitInstance.svelte'
+  import type { Team } from '../../../game/team'
   export let team: Team
-  const army = getArmy($gameInstance, team)
+  const army = gameUnitInstances($gameInstance, team)
 </script>
 
-<div class:left-side={team === Team.Player}>
+<div class:left-side={team === 'player'}>
   {#each army as unitInstance}
     <UnitInstance {unitInstance}/>
   {/each}

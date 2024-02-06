@@ -1,7 +1,7 @@
 import type { UnitDef } from './units/unit'
 import { testScenario } from './scenarios/testScenario'
 
-export type ScenarioType = 'testScenario'
+export type ScenarioType = 'testScenario' | null
 
 export interface Scenario {
   weeks: ScenarioWeek[],

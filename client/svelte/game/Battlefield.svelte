@@ -5,8 +5,8 @@
 
 <div>
   <Wall></Wall>
-  <Army team={0}/>
-  <Army team={1}/>
+  <Army team='player'/>
+  <Army team='invader'/>
 </div>
 
 <style>

@@ -1,9 +1,10 @@
-import type { UnitInstance } from './units/unit'
 import { getScenarioInfo, type Scenario, type ScenarioType } from './scenario'
 import { resolveCombat } from './combat'
-import type { UnitInstanceDef } from './units/unit'
 import { deepClone, uniqueID } from './utils'
-import { wallHealth } from './units/unitInstance'
+import type { Team } from './team'
+import type { UnitInstance } from './units/unitInstance'
+import type { UnitInstanceDef } from './units/unit'
+import type { UnitDef } from './units/unit'
 
 export type GameDef = {
   scenario: ScenarioType
@@ -11,22 +12,12 @@ export type GameDef = {
 
 export type SlotNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 
-export enum Team {
-  Player,
-  Invader,
-}
-
-export function otherTeam(team: Team): Team{
-  return (team + 1) % 2
-}
-
 export type GameState = {
   day: number,
   week: number,
   wallDamage: number,
   armies: {
-    [Team.Player]: UnitInstanceDef[],
-    [Team.Invader]: UnitInstanceDef[],
+    [key in Team]: UnitInstanceDef[]
   }
 }
 
@@ -35,25 +26,24 @@ export type GameInstance = {
   state: GameState,
 }
 
-export function createNewGameInstance(): GameInstance{
-  const scenario = 'testScenario'
+export function createNewGameInstance(scenario: ScenarioType = null): GameInstance{
   return {
     def: { scenario },
     state: {
       day: 1,
       week: 1,
       wallDamage: 0,
-      armies: [
-        [],
-        loadInvaderArmy(scenario, 1),
-      ]
+      armies: {
+        player: [],
+        invader: loadInvaderArmy(scenario, 1),
+      }
     }
   }
 }
 
 export function endDay(g: GameInstance){
   if(gameOver(g)){
-    return
+    return false
   }
   const game = deepClone(resolveCombat(g))
   // TODO: other stuff
@@ -64,6 +54,18 @@ export function endDay(g: GameInstance){
   return game
 }
 
+export function wallMaxHealth(_: GameInstance){
+  return 50
+}
+
+export function wallDamage(game: GameInstance){
+  return Math.max(0, game.state.wallDamage)
+}
+
+export function wallHealth(game: GameInstance){
+  return Math.max(wallMaxHealth(game) - wallDamage(game), 0)
+}
+
 export function gameOver(game: GameInstance): boolean{
   if(wallHealth(game) <= 0){
     return true
@@ -71,23 +73,38 @@ export function gameOver(game: GameInstance): boolean{
   return false
 }
 
-export function getArmy(game: GameInstance, team: Team): UnitInstance[]{
-  return game.state.armies[team].map<UnitInstance>(uid => {
-    return {
-      ...uid,
-      game,
-      team,
-    }
-  })
+export function getUnitInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
+  const val = game.state.armies[team][slot]
+  if(!val){
+    return val
+  }
+  return toInstance(val, game, team)
+}
+
+export function gameUnitInstances(game: GameInstance, team: Team): UnitInstance[]{
+  return game.state.armies[team].map(uid => toInstance(uid, game, team))
+}
+
+function toInstance(uid: UnitInstanceDef, game: GameInstance, team: Team): UnitInstance{
+  return {
+    ...uid,
+    game,
+    team,
+  }
 }
 
 function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstanceDef[]{
+  if(scenario === null){
+    return []
+  }
   const def: Scenario = getScenarioInfo(scenario)
   const army = def.weeks[week - 1]?.army
   if(!army){
     throw 'No army!'
   }
-  return army.map(unitDef => {
-    return { id: uniqueID(), def: unitDef, state: { damage: 0 } }
-  })
+  return army.map(instantiateUnitDef)
+}
+
+export function instantiateUnitDef(unitDef: UnitDef): UnitInstanceDef{
+  return { id: uniqueID(), def: unitDef, state: { damage: 0 } }
 }

@@ -1,17 +1,11 @@
-import type { GameInstance } from '../game'
-import type { UnitInstance } from './unit'
 import { getStat } from '../stats'
+import type { GameInstance } from '../game'
+import type { Team } from '../team'
+import type { UnitInstanceDef } from './unit'
 
-export function wallMaxHealth(_: GameInstance){
-  return 50
-}
-
-export function wallDamage(game: GameInstance){
-  return Math.max(0, game.state.wallDamage)
-}
-
-export function wallHealth(game: GameInstance){
-  return Math.max(wallMaxHealth(game) - wallDamage(game), 0)
+export interface UnitInstance extends UnitInstanceDef {
+  game: GameInstance,
+  team: Team,
 }
 
 export function getSlot(ui: UnitInstance){
