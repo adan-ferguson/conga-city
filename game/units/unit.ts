@@ -1,6 +1,4 @@
 import type { Stats } from '../stats'
-import { uniqueID } from '../utils'
-
 export type UnitBaseType = 'soldier'
 
 export interface UnitStats extends Stats {

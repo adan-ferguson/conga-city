@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon -w server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx server/main.ts",
-    "build": "vite build",
-    "tests": "npx tsc --project ./server/tsconfig.json && npx mocha --recursive ./server_dist/tests/**/*.js"
+    "build": "rm -rf './server_dist/ && tsc --project ./server/tsconfig.json"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.2",

@@ -22,23 +22,27 @@ async function runTestsInDir(dir: string, chain: string[] = []){
     if(isDir){
       await runTestsInDir(fullPath, [...chain, file])
     }else if(chain.length > 0 && path.extname(file) === '.js'){
-      const js = await import('./' + path.join(...chain, file))
-      for(const [ string, fn ] of Object.entries(js.default)){
-        if(typeof fn === 'function'){
-          await runTest(string, fn) ? passes++ : fails++
+      const chainPath = path.join(...chain, file)
+      const js = await import('./' + chainPath)
+      const obj = js.default
+      if(obj && typeof obj === 'object'){
+        for(const [ string, fn ] of Object.entries(js.default)){
+          if(typeof fn === 'function'){
+            await runTest(chainPath, string, fn) ? passes++ : fails++
+          }
         }
       }
     }
   }
 }
 
-async function runTest(key: string, fn: CallableFunction){
+async function runTest(chainPath: string, key: string, fn: CallableFunction){
   try {
     fn()
     return true
   }catch(err){
     if(err instanceof TizzestError){
-      console.log('Test failed: ', key, err.message)
+      console.log(`Test failed: ${chainPath} - ${key} - ${err.message}`)
     }else{
       throw err
     }

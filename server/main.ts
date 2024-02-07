@@ -1,7 +1,7 @@
 import { startServer } from './startServer'
-import { runTests } from './tests/runTests';
+import { runTests } from './tests/runTests'
 
-(async() => {
+export async function start(){
   await runTests()
   startServer()
-})()
+}
