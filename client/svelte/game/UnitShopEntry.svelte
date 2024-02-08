@@ -1,11 +1,13 @@
 <script lang="ts">
   import UnitVisualization from './UnitVisualization.svelte'
-  import type { UnitDef } from '../../../game/units/unit'
+  import type { UnitShopEntry } from '../../../game/shop'
+  import { getUnitShopEntryStatValue } from '../../../game/shop'
 
-  export let unitShopEntry: UnitDef
+  export let unitShopEntry: UnitShopEntry
 </script>
 
 <UnitVisualization
-        atk={unitShopEntry.stats.atk}
-        hp={unitShopEntry.stats.hp}
+        atk={getUnitShopEntryStatValue(unitShopEntry, 'atk')}
+        hp={getUnitShopEntryStatValue(unitShopEntry, 'hp')}
+        icon={unitShopEntry.def.name}
 />

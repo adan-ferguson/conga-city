@@ -1,7 +1,6 @@
 import type { GameInstance, SlotNumber } from './game'
-import { getStat } from './stats'
 import { getUnitInstance, wallHealth, wallMaxHealth } from './game'
-import { getSlot, type UnitInstance } from './units/unitInstance'
+import { getSlot, getUnitInstanceStatValue, type UnitInstance } from './units/unitInstance'
 import { deepClone } from './utils'
 import { otherTeam, type Team, TeamTypes } from './team'
 
@@ -10,6 +9,7 @@ type Target = UnitInstance | 'wall'
 interface Attack {
   attacker: UnitInstance,
   target: Target,
+  damage: number,
 }
 
 export function resolveCombat(g: GameInstance): GameInstance{
@@ -42,14 +42,17 @@ function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNum
   if(target === false){
     return
   }
+  const armor = target === 'wall' ? 0 : getUnitInstanceStatValue(target, 'armor')
+  const damage = Math.max(0, getUnitInstanceStatValue(attacker, 'atk') - armor)
   atks.push({
     attacker,
     target,
+    damage,
   })
 }
 
 function getAttackTarget(attacker: UnitInstance): Target | false{
-  const range = getStat(attacker, 'range')
+  const range = getUnitInstanceStatValue(attacker, 'range')
   const targetSlot = -getSlot(attacker) + range - 1
   if(targetSlot < 0){
     return false
@@ -75,7 +78,7 @@ function resolveAttacks(atks: Attack[]){
     dealDamage(
       atk.attacker,
       atk.target,
-      getStat(atk.attacker, 'atk'),
+      atk.damage,
     )
   })
 }
@@ -93,7 +96,7 @@ function takeWallDamage(game: GameInstance, damage: number){
 }
 
 function takeDamage(target: UnitInstance, damage: number){
-  target.state.damage = Math.min(getStat(target, 'hp'), target.state.damage + damage)
+  target.state.damage = Math.min(getUnitInstanceStatValue(target, 'hp'), target.state.damage + damage)
 }
 
 function removeDestroyedUnits(game: GameInstance){
@@ -104,7 +107,7 @@ function removeDestroyedUnits(game: GameInstance){
         game,
         team,
       }
-      return ui.state.damage < getStat(ui, 'hp')
+      return ui.state.damage < getUnitInstanceStatValue(ui, 'hp')
     })
   }
 }

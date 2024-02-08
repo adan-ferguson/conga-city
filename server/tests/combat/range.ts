@@ -1,9 +1,9 @@
-import { createNewGameInstance, endDay, GameInstance, instantiateUnitDef } from '../../../game/game'
-import { tizzest, vanilla } from '../utils'
+import { endDay, type GameInstance, instantiateUnitDef } from '../../../game/game'
+import { blankGi, tizzest, vanilla } from '../utils'
 
 const tests = {
   simpleRanged: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
         vanilla(5)
@@ -19,7 +19,7 @@ const tests = {
     tizzest(newGi.state.armies.player[0].state.damage === 2, 'Both should hit player[0]')
   },
   minimumRange1: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
         vanilla(2, 1, {
@@ -37,7 +37,7 @@ const tests = {
     tizzest(newGi.state.armies.invader[0].state.damage === 1)
   },
   noUndershoot: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
         vanilla(5),
@@ -54,7 +54,7 @@ const tests = {
     tizzest(newGi.state.armies.player[1].state.damage === 1)
   },
   noOvershoot: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
         vanilla(5),

@@ -1,5 +1,7 @@
-import { UnitDef } from '../../game/units/unit'
-import { Stats } from '../../game/stats'
+import type { UnitDef } from '../../game/units/unit'
+import type { Stats } from '../../game/stats'
+import { createNewGameInstance, getUnitInstance, instantiateUnitDef } from '../../game/game'
+import type { UnitInstance } from '../../game/units/unitInstance'
 
 export function tizzest(result: boolean, message: string = ''){
   if(!result){
@@ -29,6 +31,7 @@ export function vanilla(hp: number, atkOrStats?: Stats | number, stats?: Stats):
   }
 
   if(typeof atkOrStats === 'number' ){
+    // @ts-expect-error This error is nonsense
     def.stats.atk = atkOrStats
     if(stats){
       def.stats = {
@@ -44,4 +47,16 @@ export function vanilla(hp: number, atkOrStats?: Stats | number, stats?: Stats):
   }
 
   return def
+}
+
+export function makeUnitInstance(unitDef: UnitDef): UnitInstance{
+  const gi = blankGi()
+  gi.state.armies.player = [instantiateUnitDef(unitDef)]
+  return getUnitInstance(gi, 'player', 0)!
+}
+
+export function blankGi(){
+  return createNewGameInstance({
+    scenario: 'blank'
+  })
 }

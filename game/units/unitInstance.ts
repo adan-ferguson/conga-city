@@ -1,7 +1,7 @@
-import { getStat } from '../stats'
 import type { GameInstance } from '../game'
 import type { Team } from '../team'
 import type { UnitInstanceDef } from './unit'
+import { getStatValue, type StatName } from '../stats'
 
 export interface UnitInstance extends UnitInstanceDef {
   game: GameInstance,
@@ -16,6 +16,10 @@ export function getSlot(ui: UnitInstance){
   return slotIndex
 }
 
+export function getUnitInstanceStatValue(unit: UnitInstance, statName: StatName): number{
+  return getStatValue(unit.def.stats ?? {}, statName)
+}
+
 export function getHp(ui: UnitInstance){
-  return getStat(ui, 'hp') - ui.state.damage
+  return getUnitInstanceStatValue(ui, 'hp') - ui.state.damage
 }

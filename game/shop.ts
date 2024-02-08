@@ -1,5 +1,11 @@
 import type { UnitDef } from './units/unit'
-import { GameInstance } from './game'
+import type { GameInstance } from './game'
+import { getStatValue, type StatName } from './stats'
+
+export interface UnitShopEntry {
+  game: GameInstance
+  def: UnitDef
+}
 
 const swordsman = {
   name: 'Swordsman',
@@ -29,10 +35,16 @@ const archer = {
   }
 }
 
-export function getUnitShopEntries(_: GameInstance): UnitDef[]{
+export function getUnitShopEntries(game: GameInstance): UnitShopEntry[]{
   return [
     swordsman,
     knight,
     archer,
-  ]
+  ].map(def => {
+    return { def, game }
+  })
+}
+
+export function getUnitShopEntryStatValue(use: UnitShopEntry, statName: StatName): number{
+  return getStatValue(use.def.stats ?? {}, statName)
 }

@@ -11,7 +11,8 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "outDir": "../server_dist"
+    "outDir": "../server_dist",
+    "verbatimModuleSyntax": true
   },
   "include": [
     "./",

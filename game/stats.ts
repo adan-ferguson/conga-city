@@ -1,11 +1,15 @@
-import type { UnitStats } from './units/unit'
-import type { UnitInstance } from './units/unitInstance'
+interface StatDef {
+  integer ?: true,
+  min ?: number,
+  default ?: number,
+}
 
-const DEFS = {
-  atk: { type: 'integer', min: 0 },
-  hp: { type: 'integer', min: 1 },
-  range: { type: 'integer', min: 1 },
-  price: { type: 'integer', min: 0 },
+const DEFS: Record<string, StatDef> = {
+  atk: { integer: true, min: 0 },
+  hp: { integer: true, min: 1, default: 1 },
+  range: { integer: true, min: 1, default: 1 },
+  price: { integer: true, min: 0 },
+  armor: { integer: true, min: 0 },
 }
 
 export type StatName = keyof typeof DEFS
@@ -14,16 +18,14 @@ export type Stats = {
   [key in StatName] ?: number
 }
 
-const unitDefaults: Stats = {
-  range: 1
-}
-
-export function getStat(unit: UnitInstance, statName: StatName): number{
-  const unitStats: UnitStats = {
-    ...unitDefaults,
-    ...unit.def.stats,
+export function getStatValue(stats: Stats, statName: StatName): number{
+  const def = DEFS[statName]
+  let val = stats[statName] ?? def.min ?? 0
+  if (def.min !== undefined){
+    val = Math.max(def.min, val)
   }
-  // TODO: def constraints
-  // const def = DEFS[statName]
-  return unitStats[statName] ?? 0
+  if (def.integer){
+    val = Math.round(val)
+  }
+  return val
 }

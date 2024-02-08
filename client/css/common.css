@@ -7,3 +7,9 @@
   align-items: center;
   justify-content: space-evenly;
 }
+
+.center-contents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -26,16 +26,16 @@ export type GameInstance = {
   state: GameState,
 }
 
-export function createNewGameInstance(scenario: ScenarioType = null): GameInstance{
+export function createNewGameInstance(def: GameDef): GameInstance{
   return {
-    def: { scenario },
+    def,
     state: {
       day: 1,
       week: 1,
       wallDamage: 0,
       armies: {
         player: [],
-        invader: loadInvaderArmy(scenario, 1),
+        invader: loadInvaderArmy(def.scenario, 1),
       }
     }
   }
@@ -94,9 +94,6 @@ function toInstance(uid: UnitInstanceDef, game: GameInstance, team: Team): UnitI
 }
 
 function loadInvaderArmy(scenario: ScenarioType, week: number): UnitInstanceDef[]{
-  if(scenario === null){
-    return []
-  }
   const def: Scenario = getScenarioInfo(scenario)
   const army = def.weeks[week - 1]?.army
   if(!army){

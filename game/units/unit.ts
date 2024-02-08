@@ -1,14 +1,10 @@
 import type { Stats } from '../stats'
-export type UnitBaseType = 'soldier'
 
-export interface UnitStats extends Stats {
-  atk: number,
-  hp: number,
-}
+export type UnitBaseType = 'soldier'
 
 export type UnitDef = {
   name: string,
-  stats: UnitStats,
+  stats?: Stats,
 }
 
 export interface UnitState {

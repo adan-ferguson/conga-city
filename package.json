@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -w server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx server/main.ts",
-    "build": "rm -rf './server_dist/ && tsc --project ./server/tsconfig.json"
+    "build": "rimraf ./server_dist/ && tsc --project ./server/tsconfig.json"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.2",
@@ -19,6 +19,7 @@
     "eslint-plugin-mocha": "^10.2.0",
     "eslint-plugin-svelte": "^2.35.1",
     "nodemon": "^3.0.1",
+    "rimraf": "^5.0.5",
     "svelte": "^4.2.9"
   },
   "dependencies": {

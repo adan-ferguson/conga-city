@@ -3,12 +3,15 @@
 
   export let atk: number
   export let hp: number
+  export let icon: string
 
 
 </script>
 
 <div class="base flex-rows flex-centered">
-  <div class="unit-image"></div>
+  <div class="unit-image center-contents">
+    {icon.substring(0,1).toUpperCase()}
+  </div>
   <div class="stats flex-cols flex-centered">
     <Icon val={atk} type="sword"/>
     <Icon val={hp} type="heart"/>

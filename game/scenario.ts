@@ -1,7 +1,13 @@
 import type { UnitDef } from './units/unit'
-import { testScenario } from './scenarios/testScenario'
+import { blank } from './scenarios/blank'
+import { test } from './scenarios/test'
 
-export type ScenarioType = 'testScenario' | null
+export const Scenarios: Record<string,Scenario> = {
+  blank,
+  test,
+}
+
+export type ScenarioType = keyof typeof Scenarios
 
 export interface Scenario {
   weeks: ScenarioWeek[],
@@ -11,6 +17,6 @@ export interface ScenarioWeek {
   army: UnitDef[]
 }
 
-export function getScenarioInfo(_: ScenarioType): Scenario{
-  return testScenario
+export function getScenarioInfo(st: ScenarioType): Scenario{
+  return Scenarios[st]
 }

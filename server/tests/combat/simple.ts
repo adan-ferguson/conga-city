@@ -1,16 +1,16 @@
-import { createNewGameInstance, endDay, GameInstance, instantiateUnitDef } from '../../../game/game'
-import { tizzest, vanilla } from '../utils'
+import { endDay, type GameInstance, instantiateUnitDef } from '../../../game/game'
+import { blankGi, tizzest, vanilla } from '../utils'
 
 const tests = {
   enemyHasNoUnits: () => {
     // ?? end day should work, but nothing should happen
   },
   wallDamageIfNoPlayer: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [],
       invader: [
-        vanilla(5),
+        vanilla(5, 5),
       ].map(instantiateUnitDef)
     }
     const newGi = endDay(gi)
@@ -20,13 +20,13 @@ const tests = {
     tizzest(newGi.state.wallDamage === 5, 'Wall dealt 5 damage')
   },
   vanillaMeleeCombat: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
-        vanilla(4)
+        vanilla(4, 4)
       ].map(instantiateUnitDef),
       invader: [
-        vanilla(5)
+        vanilla(5, 5)
       ].map(instantiateUnitDef),
     }
     const newGi = <GameInstance>endDay(gi)
@@ -35,16 +35,16 @@ const tests = {
     tizzest(newGi.state.armies.invader[0].state.damage === 4, 'Invader unit damaged')
   },
   multiRoundCombat: () => {
-    const gi = createNewGameInstance()
+    const gi = blankGi()
     gi.state.armies = {
       player: [
-        vanilla(3),
-        vanilla(3),
-        vanilla(3),
+        vanilla(3, 3),
+        vanilla(3, 3),
+        vanilla(3, 3),
       ].map(instantiateUnitDef),
       invader: [
-        vanilla(5),
-        vanilla(5),
+        vanilla(5, 5),
+        vanilla(5, 5),
       ].map(instantiateUnitDef),
     }
     gi.state.day = 4

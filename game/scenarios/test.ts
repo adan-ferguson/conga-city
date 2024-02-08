@@ -12,10 +12,10 @@ function soldier(){
   }
 }
 
-const testScenario : Scenario = {
+const test : Scenario = {
   weeks: [{
     army: fillArray<UnitDef>(8, () => soldier())
   }]
 }
 
-export { testScenario }
+export { test }
