@@ -11,7 +11,7 @@ export interface TransactionData {
 
 export const transactionStore = writable<TransactionData | undefined>(undefined)
 
-export function performTransaction(slot: SlotNumber){
+export function performTransaction(slot: SlotNumber | 'auto' = 'auto'){
   const val = get(transactionStore)
   if(!val){
     return
@@ -20,4 +20,5 @@ export function performTransaction(slot: SlotNumber){
   if(after){
     gameInstance.set(after)
   }
+  transactionStore.set(undefined)
 }

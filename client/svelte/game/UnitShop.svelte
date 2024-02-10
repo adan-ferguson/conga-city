@@ -1,16 +1,20 @@
 <script lang="ts">
   import { gameInstance } from '../../ts/gameInstanceStore'
-  import { getUnitShopEntries } from '../../../game/shop'
-  import { transactionStore } from '../../ts/transactionStore'
-  import UnitShopEntry from './UnitShopEntry.svelte'
+  import { getUnitShopEntries, type UnitShopEntry } from '../../../game/shop'
+  import { performTransaction, transactionStore } from '../../ts/transactionStore'
+  import UnitShopEntryC from './UnitShopEntry.svelte'
 
   const unitShopEntries = getUnitShopEntries($gameInstance)
 
-  function startTransaction(key: keyof typeof unitShopEntries){
-    transactionStore.set({
-      type: 'unit',
-      data: unitShopEntries[key]
-    })
+  function startTransaction(unitShopEntry: UnitShopEntry){
+    if($transactionStore?.data === unitShopEntry){
+      performTransaction()
+    }else{
+      transactionStore.set({
+        type: 'unit',
+        data: unitShopEntry,
+      })
+    }
   }
 
 </script>
@@ -18,8 +22,8 @@
 <ul>
   {#each Object.entries(unitShopEntries) as [key, unitShopEntry] (key)}
     <li class="flex-cols flex-centered">
-      <UnitShopEntry {unitShopEntry}/>
-      <button class='clickable-padded' on:click|stopPropagation={() => startTransaction(key)}>
+      <UnitShopEntryC {unitShopEntry}/>
+      <button class='clickable-padded' on:click|stopPropagation={() => startTransaction(unitShopEntry)}>
         Buy
       </button>
     </li>

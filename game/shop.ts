@@ -54,8 +54,9 @@ export function getUnitShopEntryStatValue(use: UnitShopEntry, statName: StatName
   return getStatValue(use.def.stats ?? {}, statName)
 }
 
-export function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SlotNumber): GameInstance{
+export function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SlotNumber | 'auto'): GameInstance{
   const after = deepClone(game)
-  after.state.armies.player.splice(slot, 0, instantiateUnitDef(use.def))
+  const s = slot === 'auto' ? after.state.armies.player.length : slot
+  after.state.armies.player.splice(s, 0, instantiateUnitDef(use.def))
   return after
 }
