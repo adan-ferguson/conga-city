@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { gameInstance } from '../../ts/gameInstanceStore'
+  import { gameInstanceStore } from '../../ts/gameInstanceStore'
 
   import { wallHealth } from '../../../game/game'
 </script>
 
 <div>
-  [{wallHealth($gameInstance)}]
+  [{wallHealth($gameInstanceStore)}]
 </div>
 
 <style>

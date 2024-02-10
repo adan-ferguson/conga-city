@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gameInstance } from '../../ts/gameInstanceStore'
+  import { gameInstanceStore } from '../../ts/gameInstanceStore'
   import { gameUnitInstances, type SlotNumber } from '../../../game/game'
   import UnitInstanceC from './UnitInstance.svelte'
   import type { Team } from '../../../game/team'
@@ -9,7 +9,7 @@
   
   let army
   let paddedArmy
-  gameInstance.subscribe(val => {
+  gameInstanceStore.subscribe(val => {
     army = gameUnitInstances(val, team)
     paddedArmy = padArray(army, 8)
   })

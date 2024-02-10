@@ -1,25 +1,44 @@
 <script lang="ts">
-  import { gameInstance } from '../../ts/gameInstanceStore'
+  import { gameInstanceStore } from '../../ts/gameInstanceStore'
   import { combatRounds } from '../../../game/combat'
-  import { endDay, gameOver } from '../../../game/game'
+  import { endDay } from '../../../game/game'
+
+  function endDayClicked(){
+    const after = endDay($gameInstanceStore)
+    if(after){
+      gameInstanceStore.newDay(after)
+    }
+  }
+
+  function undo(){
+    gameInstanceStore.undo()
+  }
+
 </script>
 
 <div class="flex-cols flex-centered">
   <span class="day-and-week">
-    Week { $gameInstance.state.week }, Day { $gameInstance.state.day }
+    Week { $gameInstanceStore.state.week }, Day { $gameInstanceStore.state.day }
   </span>
   <span class="rounds">
-    Rounds: { combatRounds($gameInstance) }
+    Rounds: { combatRounds($gameInstanceStore) }
   </span>
-  <button
-    class="clickable-padded"
-    disabled={gameOver($gameInstance)}
-    on:click={() => {
-      const after = endDay($gameInstance)
-      if(after){
-        gameInstance.set(after)
-      }
-    }}>End Day</button>
+  <section class="buttons">
+    <button
+      class="clickable-padded"
+      on:click={endDayClicked}
+    >End Day
+    </button>
+    <button class="clickable-padded">
+      Preview
+    </button>
+    <button
+      class="clickable-padded"
+      on:click={undo}
+    >
+      Undo
+    </button>
+  </section>
 </div>
 
 <style>

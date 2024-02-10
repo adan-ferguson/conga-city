@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { gameInstance } from '../../ts/gameInstanceStore'
+  import { gameInstanceStore } from '../../ts/gameInstanceStore'
   import { getUnitShopEntries, type UnitShopEntry } from '../../../game/shop'
   import { performTransaction, transactionStore } from '../../ts/transactionStore'
   import UnitShopEntryC from './UnitShopEntry.svelte'
 
-  const unitShopEntries = getUnitShopEntries($gameInstance)
+  const unitShopEntries = getUnitShopEntries($gameInstanceStore)
 
   function startTransaction(unitShopEntry: UnitShopEntry){
     if($transactionStore?.data === unitShopEntry){
