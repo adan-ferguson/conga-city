@@ -41,7 +41,7 @@ export function createNewGameInstance(def: GameDef): GameInstance{
   }
 }
 
-export function endDay(g: GameInstance){
+export function endDay(g: GameInstance): false | GameInstance{
   if(gameOver(g)){
     return false
   }

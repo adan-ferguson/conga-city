@@ -3,7 +3,7 @@ import type { Stats } from '../stats'
 export type UnitBaseType = 'soldier'
 
 export type UnitDef = {
-  name: string,
+  name?: string,
   stats?: Stats,
 }
 

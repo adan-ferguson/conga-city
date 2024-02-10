@@ -20,10 +20,10 @@
 
 <style>
   div.base {
-    height: 3rem;
-    width: 2rem;
+    /*height: 3rem;*/
+    /*width: 2rem;*/
   }
-  .stats {
+  div.stats {
     font-size: 0.6em;
   }
   div.unit-image {

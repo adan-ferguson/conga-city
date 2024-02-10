@@ -11,3 +11,15 @@ export function fillArray<T>(length: number, cb: () => T){
 export function uniqueID(): string{
   return v4()
 }
+
+export function toDisplayName(key: string): string{
+  return key.substring(0, 1).toUpperCase() + key.substring(1)
+}
+
+export function padArray<T>(arr: T[], length: number): (T|undefined)[]{
+  const newArr: (T|undefined)[] = []
+  for(let i = 0; i < length; i++){
+    newArr[i] = arr[i]
+  }
+  return newArr
+}

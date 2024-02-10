@@ -12,8 +12,14 @@
     Rounds: { combatRounds($gameInstance) }
   </span>
   <button
+    class="clickable-padded"
     disabled={gameOver($gameInstance)}
-    on:click={() => gameInstance.set(endDay($gameInstance))}>End Day</button>
+    on:click={() => {
+      const after = endDay($gameInstance)
+      if(after){
+        gameInstance.set(after)
+      }
+    }}>End Day</button>
 </div>
 
 <style>

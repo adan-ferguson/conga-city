@@ -8,6 +8,7 @@ import UnitShop from './UnitShop.svelte'
 
 <style>
   div {
+    padding: 0.5rem;
     overflow: hidden
   }
 </style>

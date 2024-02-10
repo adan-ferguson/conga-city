@@ -7,7 +7,7 @@
 </script>
 
 <UnitVisualization
-        atk={getUnitShopEntryStatValue(unitShopEntry, 'atk')}
-        hp={getUnitShopEntryStatValue(unitShopEntry, 'hp')}
-        icon={unitShopEntry.def.name}
+  atk={getUnitShopEntryStatValue(unitShopEntry, 'atk')}
+  hp={getUnitShopEntryStatValue(unitShopEntry, 'hp')}
+  icon={unitShopEntry.def.name}
 />

@@ -2,6 +2,9 @@
   import Calendar from './Calendar.svelte'
   import Battlefield from './Battlefield.svelte'
   import Town from './Town.svelte'
+  import { transactionStore } from '../../ts/transactionStore'
+
+  $: console.log($transactionStore)
 </script>
 
 <div class="page">
