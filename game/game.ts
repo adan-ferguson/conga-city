@@ -78,14 +78,14 @@ export function getUnitInstance(game: GameInstance, team: Team, slot: SlotNumber
   if(!val){
     return val
   }
-  return toInstance(val, game, team)
+  return toUnitInstance(val, game, team)
 }
 
 export function gameUnitInstances(game: GameInstance, team: Team): UnitInstance[]{
-  return game.state.armies[team].map(uid => toInstance(uid, game, team))
+  return game.state.armies[team].map(uid => toUnitInstance(uid, game, team))
 }
 
-function toInstance(uid: UnitInstanceDef, game: GameInstance, team: Team): UnitInstance{
+export function toUnitInstance(uid: UnitInstanceDef, game: GameInstance, team: Team): UnitInstance{
   return {
     ...uid,
     game,

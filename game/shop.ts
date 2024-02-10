@@ -4,7 +4,7 @@ import { getStatValue, type StatName } from './stats'
 import { deepClone, toDisplayName } from './utils'
 import { instantiateUnitDef } from './game'
 
-const entries: Record<string, UnitDef> = {
+const entries: Record<string, Partial<UnitDef>> = {
   swordsman: {
     stats: {
       atk: 2,
