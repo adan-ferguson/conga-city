@@ -4,15 +4,13 @@ interface StatDef {
   default ?: number,
 }
 
-const DEFS: Record<string, StatDef> = {
+export type StatName = 'atk' | 'hp' | 'price' | 'armor'
+const DEFS: Record<StatName, StatDef> = {
   atk: { integer: true, min: 0 },
   hp: { integer: true, min: 1, default: 1 },
-  range: { integer: true, min: 1, default: 1 },
   price: { integer: true, min: 0 },
   armor: { integer: true, min: 0 },
 }
-
-export type StatName = keyof typeof DEFS
 
 export type Stats = {
   [key in StatName] ?: number

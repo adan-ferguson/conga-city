@@ -1,7 +1,7 @@
 <script lang="ts">
   import { icons } from '../ts/icons'
 
-  export let val: string | number | undefined
+  export let val: string | number | undefined = undefined
   export let type: keyof typeof icons
 </script>
 
@@ -15,6 +15,8 @@
     & svg {
       width: 0.8em;
       height: 0.8em;
+      fill: var(--color, white);
+      stroke: var(--color, white);
     }
   }
 </style>

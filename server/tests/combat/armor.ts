@@ -12,8 +12,8 @@ const tests = {
         vanilla(1, 1),
       ].map(instantiateUnitDef)
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.armies.player[0].state.damage === 1)
+    const res = endDay(gi)
+    tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   zeroArmor: () => {
     const gi = blankGi()
@@ -25,8 +25,8 @@ const tests = {
         vanilla(1, 1),
       ].map(instantiateUnitDef)
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.armies.player[0].state.damage === 1)
+    const res = endDay(gi)
+    tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   oneArmor: () => {
     const gi = blankGi()
@@ -38,8 +38,8 @@ const tests = {
         vanilla(1, 3),
       ].map(instantiateUnitDef)
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.armies.player[0].state.damage === 2)
+    const res = endDay(gi)
+    tizzest(res.stateAfter.armies.player[0].state.damage === 2)
   },
   twoArmor: () => {
     const gi = blankGi()
@@ -51,8 +51,8 @@ const tests = {
         vanilla(1, 3),
       ].map(instantiateUnitDef)
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.armies.player[0].state.damage === 1)
+    const res = endDay(gi)
+    tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   overkillArmor: () => {
     const gi = blankGi()
@@ -64,8 +64,8 @@ const tests = {
         vanilla(1, 3),
       ].map(instantiateUnitDef)
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.armies.player[0].state.damage === 0)
+    const res = endDay(gi)
+    tizzest(res.stateAfter.armies.player[0].state.damage === 0)
   }
 }
 

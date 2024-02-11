@@ -1,5 +1,5 @@
 import { getScenarioInfo, type Scenario, type ScenarioType } from './scenario'
-import { resolveCombat } from './combat'
+import { type CombatResult, resolveCombat } from './combat'
 import { deepClone, uniqueID } from './utils'
 import type { Team } from './team'
 import type { UnitInstance } from './units/unitInstance'
@@ -41,17 +41,19 @@ export function createNewGameInstance(def: GameDef): GameInstance{
   }
 }
 
-export function endDay(g: GameInstance): false | GameInstance{
+export function endDay(g: GameInstance): { stateAfter: GameState, results: CombatResult[] }{
   if(gameOver(g)){
-    return false
+    throw 'Could not end day'
   }
-  const game = deepClone(resolveCombat(g))
-  // TODO: other stuff
-  if(game.state.day === 7){
-    game.state.week += 1
+  const results = resolveCombat(g)
+  const stateAfter = deepClone(results.at(-1)?.stateAfter ?? g.state)
+
+  // TODO: Cleanup
+  if(stateAfter.day === 7){
+    stateAfter.week += 1
   }
-  game.state.day = 1 + (game.state.day % 7)
-  return game
+  stateAfter.day = 1 + (stateAfter.day % 7)
+  return { stateAfter, results }
 }
 
 export function wallMaxHealth(_: GameInstance){

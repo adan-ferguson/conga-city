@@ -13,11 +13,8 @@ const tests = {
         vanilla(5, 5),
       ].map(instantiateUnitDef)
     }
-    const newGi = endDay(gi)
-    if(newGi === false){
-      return tizzest(false, 'endDay returned false')
-    }
-    tizzest(newGi.state.wallDamage === 5, 'Wall dealt 5 damage')
+    const res = endDay(gi)
+    tizzest(res.stateAfter.wallDamage === 5, 'Wall dealt 5 damage')
   },
   vanillaMeleeCombat: () => {
     const gi = blankGi()
@@ -29,10 +26,10 @@ const tests = {
         vanilla(5, 5)
       ].map(instantiateUnitDef),
     }
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.wallDamage === 0, 'No wall damage')
-    tizzest(newGi.state.armies.player.length === 0, 'Player unit destroyed')
-    tizzest(newGi.state.armies.invader[0].state.damage === 4, 'Invader unit damaged')
+    const res = endDay(gi)
+    tizzest(res.stateAfter.wallDamage === 0, 'No wall damage')
+    tizzest(res.stateAfter.armies.player.length === 0, 'Player unit destroyed')
+    tizzest(res.stateAfter.armies.invader[0].state.damage === 4, 'Invader unit damaged')
   },
   multiRoundCombat: () => {
     const gi = blankGi()
@@ -48,10 +45,11 @@ const tests = {
       ].map(instantiateUnitDef),
     }
     gi.state.day = 4
-    const newGi = <GameInstance>endDay(gi)
-    tizzest(newGi.state.wallDamage === 5)
-    tizzest(newGi.state.armies.player.length === 0)
-    tizzest(newGi.state.armies.invader[0].state.damage === 3)
+    const res = endDay(gi)
+    tizzest(res.results.length === 4)
+    tizzest(res.stateAfter.wallDamage === 5)
+    tizzest(res.stateAfter.armies.player.length === 0)
+    tizzest(res.stateAfter.armies.invader[0].state.damage === 3)
   },
 }
 

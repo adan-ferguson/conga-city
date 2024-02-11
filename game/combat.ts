@@ -1,4 +1,4 @@
-import type { GameInstance, SlotNumber } from './game'
+import type { GameInstance, GameState, SlotNumber } from './game'
 import { getUnitInstance, wallHealth, wallMaxHealth } from './game'
 import { getSlot, getUnitInstanceStatValue, type UnitInstance } from './units/unitInstance'
 import { deepClone } from './utils'
@@ -12,8 +12,19 @@ interface Attack {
   damage: number,
 }
 
-export function resolveCombat(g: GameInstance): GameInstance{
+export interface CombatEvent {
+
+}
+
+export interface CombatResult {
+  stateAfter: GameState,
+  round: number | 'precombat' | 'postcombat',
+  events: CombatEvent[],
+}
+
+export function resolveCombat(g: GameInstance): CombatResult[]{
   const game = deepClone(g)
+  const results: CombatResult[] = []
   for(let i = 0; i < combatRounds(game); i++){
     const atks: Attack[] = []
     for(let j = 0; j < 8; j++){
@@ -22,11 +33,16 @@ export function resolveCombat(g: GameInstance): GameInstance{
     }
     resolveAttacks(atks)
     removeDestroyedUnits(game)
+    results.push({
+      stateAfter: deepClone(game.state),
+      round: i + 1,
+      events: [],
+    })
     if(combatEnded(game)){
       break
     }
   }
-  return game
+  return results
 }
 
 export function combatRounds(game: GameInstance){
@@ -52,7 +68,7 @@ function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNum
 }
 
 function getAttackTarget(attacker: UnitInstance): Target | false{
-  const range = getUnitInstanceStatValue(attacker, 'range')
+  const range = 1 //getUnitInstanceStatValue(attacker, 'range')
   const targetSlot = -getSlot(attacker) + range - 1
   if(targetSlot < 0){
     return false

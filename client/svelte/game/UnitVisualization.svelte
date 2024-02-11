@@ -20,15 +20,18 @@
 
 <style>
   div.base {
-    /*height: 3rem;*/
-    /*width: 2rem;*/
-  }
-  div.stats {
-    font-size: 0.6em;
+    height: 2.6em;
+    width: 2em;
+    display: grid;
+    grid-template-rows: 2em 0.6em;
   }
   div.unit-image {
-    border: 0.1rem solid white;
+    border: 0.1em solid white;
     height: 2em;
-    width: 2rem;
+    width: 2em;
+    box-sizing: border-box;
+  }
+  div.stats {
+    font-size: 0.55em;
   }
 </style>

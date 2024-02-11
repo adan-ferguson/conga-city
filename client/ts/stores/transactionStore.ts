@@ -1,8 +1,8 @@
 import { writable, get } from 'svelte/store'
-import type { UnitShopEntry } from '../../game/shop'
-import type { SlotNumber } from '../../game/game'
-import { gameInstanceStore } from './gameInstanceStore'
-import { buyUnit } from '../../game/shop'
+import type { UnitShopEntry } from '../../../game/shop'
+import type { SlotNumber } from '../../../game/game'
+import { gameStateStore, getGameInstance } from './gameStores'
+import { buyUnit } from '../../../game/shop'
 
 export interface TransactionData {
   type: 'unit',
@@ -16,9 +16,9 @@ export function performTransaction(slot: SlotNumber | 'auto' = 'auto'){
   if(!val){
     return
   }
-  const after = buyUnit(get(gameInstanceStore), val.data, slot)
-  if(after){
-    gameInstanceStore.push(after)
+  const afterState = buyUnit(getGameInstance(), val.data, slot)
+  if(afterState){
+    gameStateStore.push(afterState)
   }
   transactionStore.set(undefined)
 }

@@ -23,3 +23,9 @@ export function padArray<T>(arr: T[], length: number): (T|undefined)[]{
   }
   return newArr
 }
+
+export function wait(ms: number){
+  return new Promise(res => {
+    setTimeout(res, ms)
+  })
+}

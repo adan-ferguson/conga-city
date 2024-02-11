@@ -1,18 +1,22 @@
 <script lang="ts">
-  import { gameInstanceStore } from '../../ts/gameInstanceStore'
-  import { gameUnitInstances, type SlotNumber } from '../../../game/game'
+  import { type GameInstance, gameUnitInstances, type SlotNumber } from '../../../game/game'
+  import { fly, fade } from 'svelte/transition'
   import UnitInstanceC from './UnitInstance.svelte'
   import type { Team } from '../../../game/team'
-  import { performTransaction, transactionStore } from '../../ts/transactionStore'
+  import { performTransaction, transactionStore } from '../../ts/stores/transactionStore'
   import { padArray } from '../../../game/utils'
+  import type { UnitInstance } from '../../../game/units/unitInstance'
+  import { cubicOut } from 'svelte/easing'
+
   export let team: Team
-  
-  let army
-  let paddedArmy
-  gameInstanceStore.subscribe(val => {
-    army = gameUnitInstances(val, team)
-    paddedArmy = padArray(army, 8)
-  })
+  export let gameInstance: GameInstance
+
+  let army: UnitInstance[]
+  let paddedArmy: (UnitInstance | undefined)[]
+  $:{
+    army = gameUnitInstances(gameInstance, team)
+    paddedArmy = padArray(army, Math.min(army.length + 1, 8))
+  }
 
   let pendingTransaction: boolean = false
   $: pendingTransaction = !!$transactionStore && team === 'player'
@@ -24,15 +28,39 @@
     performTransaction(slot)
   }
 
+  function spawnAnim(node){
+    const o = +getComputedStyle(node).opacity
+    return {
+      easing: cubicOut,
+      css: t => `
+opacity: ${t * o};
+flex-basis: ${12.5 * t}%;
+      `
+    }
+  }
+
+  function deathAnim(node){
+    const o = +getComputedStyle(node).opacity
+    return {
+      easing: cubicOut,
+      css: t => `
+opacity: ${t * o};
+flex-basis: ${12.5 * t}%;
+      `
+    }
+  }
+
 </script>
 
 <div
   class="base"
   class:left-side={team === 'player'}
 >
-  {#each paddedArmy as unitInstance, i}
+  {#each paddedArmy as unitInstance, i (unitInstance?.id ?? 0)}
     <button
-      class="army-slot"
+      in:spawnAnim
+      out:deathAnim
+      class="army-slot center-contents"
       on:click={() => clicked(i)}
       class:clickable={pendingTransaction && (unitInstance || i === army.length)}
     >
@@ -54,7 +82,7 @@
     }
   }
   button.army-slot {
-    flex: 0 1 12.5%;
+    flex: 0 0 12.5%;
     height: 100%;
   }
 </style>

@@ -1,11 +1,12 @@
 import type { UnitDef } from './units/unit'
-import type { GameInstance, SlotNumber } from './game'
+import type { GameInstance, GameState, SlotNumber } from './game'
 import { getStatValue, type StatName } from './stats'
 import { deepClone, toDisplayName } from './utils'
 import { instantiateUnitDef } from './game'
 
-const entries: Record<string, Partial<UnitDef>> = {
+const entries: Record<string, UnitDef> = {
   swordsman: {
+    name: 'Swordsman',
     stats: {
       atk: 2,
       hp: 2,
@@ -13,6 +14,7 @@ const entries: Record<string, Partial<UnitDef>> = {
     }
   },
   knight: {
+    name: 'Knight',
     stats: {
       atk: 3,
       hp: 23,
@@ -20,10 +22,11 @@ const entries: Record<string, Partial<UnitDef>> = {
     }
   },
   archer: {
+    name: 'Archer',
     stats: {
       atk: 1,
       hp: 1,
-      range: 5,
+      //range: 5,
       price: 2,
     }
   }
@@ -54,9 +57,9 @@ export function getUnitShopEntryStatValue(use: UnitShopEntry, statName: StatName
   return getStatValue(use.def.stats ?? {}, statName)
 }
 
-export function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SlotNumber | 'auto'): GameInstance{
+export function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SlotNumber | 'auto'): GameState{
   const after = deepClone(game)
   const s = slot === 'auto' ? after.state.armies.player.length : slot
   after.state.armies.player.splice(s, 0, instantiateUnitDef(use.def))
-  return after
+  return after.state
 }
