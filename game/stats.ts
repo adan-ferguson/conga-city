@@ -1,22 +1,20 @@
-interface StatDef {
+export interface StatDef {
   integer ?: true,
   min ?: number,
   default ?: number,
 }
 
-export type StatName = 'atk' | 'hp' | 'price' | 'armor'
-const DEFS: Record<StatName, StatDef> = {
+const DEFS: Record<string, StatDef> = {
   atk: { integer: true, min: 0 },
   hp: { integer: true, min: 1, default: 1 },
   price: { integer: true, min: 0 },
   armor: { integer: true, min: 0 },
 }
 
-export type Stats = {
-  [key in StatName] ?: number
-}
+export type StatName = keyof typeof DEFS
+export type Stats = Record<StatName, number>
 
-export function getStatValue(stats: Stats, statName: StatName): number{
+function getValue(stats: Stats, statName: StatName): number{
   const def = DEFS[statName]
   let val = stats[statName] ?? def.min ?? 0
   if (def.min !== undefined){
@@ -26,4 +24,8 @@ export function getStatValue(stats: Stats, statName: StatName): number{
     val = Math.round(val)
   }
   return val
+}
+
+export const gameStats = {
+  getValue,
 }

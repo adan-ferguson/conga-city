@@ -1,7 +1,7 @@
 import { readdir, lstat } from 'fs/promises'
 import * as url from 'url'
 import path from 'path'
-import { TizzestError } from './utils'
+import { TizzestError } from './tizzest'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 let passes: number
@@ -41,11 +41,9 @@ async function runTest(chainPath: string, key: string, fn: CallableFunction){
     fn()
     return true
   }catch(err){
-    if(err instanceof TizzestError){
-      console.log(`Test failed: ${chainPath} - ${key} - ${err.message}`)
-    }else{
-      throw err
-    }
+    // @ts-expect-error -- Who cares
+    const msg: string = (typeof err?.message === 'string') ? err.message : `Error: ${err}`
+    console.log(`Test failed: ${chainPath} - ${key} - ${msg}`)
     return false
   }
 }

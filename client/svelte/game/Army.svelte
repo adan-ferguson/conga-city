@@ -1,49 +1,49 @@
 <script lang="ts">
-  import { type GameInstance, gameUnitInstances, type SlotNumber } from '../../../game/game'
-  import { fly, fade } from 'svelte/transition'
+  import { gameUnitInstances } from '../../../game/game'
   import UnitInstanceC from './UnitInstance.svelte'
   import type { Team } from '../../../game/team'
-  import { performTransaction, transactionStore } from '../../ts/stores/transactionStore'
+  import { performTransaction, pendingActionStore } from '../../ts/pendingAction'
   import { padArray } from '../../../game/utils'
-  import type { UnitInstance } from '../../../game/units/unitInstance'
+  import type { UnitInstance } from '../../../game/unit'
   import { cubicOut } from 'svelte/easing'
+  import { gameInstanceStore } from '../../ts/game'
+  import type { SlotNumber } from '../../../game/types'
 
   export let team: Team
-  export let gameInstance: GameInstance
 
   let army: UnitInstance[]
   let paddedArmy: (UnitInstance | undefined)[]
   $:{
-    army = gameUnitInstances(gameInstance, team)
+    army = gameUnitInstances($gameInstanceStore, team)
     paddedArmy = padArray(army, Math.min(army.length + 1, 8))
   }
 
   let pendingTransaction: boolean = false
-  $: pendingTransaction = !!$transactionStore && team === 'player'
+  $: pendingTransaction = !!$pendingActionStore && team === 'player'
 
   function clicked(slot: SlotNumber){
-    if(!pendingTransaction || !$transactionStore){
+    if(!pendingTransaction || !$pendingActionStore){
       return
     }
     performTransaction(slot)
   }
 
-  function spawnAnim(node){
+  function spawnAnim(node: HTMLElement){
     const o = +getComputedStyle(node).opacity
     return {
       easing: cubicOut,
-      css: t => `
+      css: (t: number) => `
 opacity: ${t * o};
 flex-basis: ${12.5 * t}%;
       `
     }
   }
 
-  function deathAnim(node){
+  function deathAnim(node: HTMLElement){
     const o = +getComputedStyle(node).opacity
     return {
       easing: cubicOut,
-      css: t => `
+      css: (t: number) => `
 opacity: ${t * o};
 flex-basis: ${12.5 * t}%;
       `
@@ -75,7 +75,6 @@ flex-basis: ${12.5 * t}%;
   div.base {
     display: flex;
     overflow: hidden;
-    gap: 0.5vh;
     align-items: center;
     &.left-side {
       flex-direction: row-reverse;

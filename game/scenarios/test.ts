@@ -1,6 +1,6 @@
 import type { Scenario } from '../scenario'
 import { fillArray } from '../utils'
-import type { UnitDef } from '../units/unit'
+import type { UnitDef } from '../unit'
 
 function soldier(){
   return {

@@ -1,5 +1,7 @@
-import { endDay, type GameInstance, instantiateUnitDef } from '../../../game/game'
-import { blankGi, tizzest, vanilla } from '../utils'
+import { blankGi, vanilla } from '../utils'
+import { gameUnit } from '../../../game/unit'
+import { gameGame } from '../../../game/game'
+import { tizzest } from '../tizzest'
 
 const tests = {
   noNegativeArmor: () => {
@@ -7,12 +9,12 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: -5 }),
-      ].map(instantiateUnitDef),
+      ].map(gameUnit.toInstanceDef),
       invader: [
         vanilla(1, 1),
-      ].map(instantiateUnitDef)
+      ].map(gameUnit.toInstanceDef)
     }
-    const res = endDay(gi)
+    const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   zeroArmor: () => {
@@ -20,12 +22,12 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 0 }),
-      ].map(instantiateUnitDef),
+      ].map(gameUnit.toInstanceDef),
       invader: [
         vanilla(1, 1),
-      ].map(instantiateUnitDef)
+      ].map(gameUnit.toInstanceDef)
     }
-    const res = endDay(gi)
+    const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   oneArmor: () => {
@@ -33,12 +35,12 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 1 }),
-      ].map(instantiateUnitDef),
+      ].map(gameUnit.toInstanceDef),
       invader: [
         vanilla(1, 3),
-      ].map(instantiateUnitDef)
+      ].map(gameUnit.toInstanceDef)
     }
-    const res = endDay(gi)
+    const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 2)
   },
   twoArmor: () => {
@@ -46,12 +48,12 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 2 }),
-      ].map(instantiateUnitDef),
+      ].map(gameUnit.toInstanceDef),
       invader: [
         vanilla(1, 3),
-      ].map(instantiateUnitDef)
+      ].map(gameUnit.toInstanceDef)
     }
-    const res = endDay(gi)
+    const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
   },
   overkillArmor: () => {
@@ -59,12 +61,12 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 6 }),
-      ].map(instantiateUnitDef),
+      ].map(gameUnit.toInstanceDef),
       invader: [
         vanilla(1, 3),
-      ].map(instantiateUnitDef)
+      ].map(gameUnit.toInstanceDef)
     }
-    const res = endDay(gi)
+    const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 0)
   }
 }

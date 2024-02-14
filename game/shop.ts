@@ -1,10 +1,12 @@
-import type { UnitDef } from './units/unit'
-import type { GameInstance, GameState, SlotNumber } from './game'
-import { getStatValue, type StatName } from './stats'
-import { deepClone, toDisplayName } from './utils'
-import { instantiateUnitDef } from './game'
+import type { UnitDef } from './unit'
+import type { GameInstance, GameState } from './game'
+import { deepClone } from './utils'
+import type { StatName } from './stats'
+import { gameStats } from './stats'
+import { gameUnit } from './unit'
+import type { Choice, SpawnSlot } from './choices'
 
-const entries: Record<string, UnitDef> = {
+const defs: Record<string, UnitDef> = {
   swordsman: {
     name: 'Swordsman',
     stats: {
@@ -32,34 +34,48 @@ const entries: Record<string, UnitDef> = {
   }
 }
 
+export type UnitShopKey = keyof typeof defs
+
 export interface UnitShopEntry {
   game: GameInstance,
   def: UnitDef,
-  key: keyof typeof entries
+  key: UnitShopKey,
 }
 
-export function getUnitShopEntries(game: GameInstance): Record<keyof typeof entries, UnitShopEntry>{
-  const obj: Record<keyof typeof entries, UnitShopEntry> = {}
-  for(const key in entries){
+function getEntries(game: GameInstance): Record<keyof typeof defs, UnitShopEntry>{
+  const obj: Record<keyof typeof defs, UnitShopEntry> = {}
+  for(const key in defs){
     obj[key] = {
       key,
-      def: {
-        ...entries[key],
-        name: entries[key].name ?? toDisplayName(key),
-      },
+      def: defs[key],
       game,
     }
   }
   return obj
 }
 
-export function getUnitShopEntryStatValue(use: UnitShopEntry, statName: StatName): number{
-  return getStatValue(use.def.stats ?? {}, statName)
+function getStatValue(use: UnitShopEntry, statName: StatName): number{
+  return gameStats.getValue(use.def.stats ?? {}, statName)
 }
 
-export function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SlotNumber | 'auto'): GameState{
+function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SpawnSlot): GameState{
   const after = deepClone(game)
   const s = slot === 'auto' ? after.state.armies.player.length : slot
-  after.state.armies.player.splice(s, 0, instantiateUnitDef(use.def))
+  after.state.armies.player.splice(s, 0, gameUnit.toInstanceDef(use.def))
   return after.state
+}
+
+function getEntry(game: GameInstance, key: UnitShopKey): UnitShopEntry{
+  return {
+    key,
+    game,
+    def: defs[key],
+  }
+}
+
+export const gameShop = {
+  buyUnit,
+  getEntry,
+  getEntries,
+  getStatValue,
 }

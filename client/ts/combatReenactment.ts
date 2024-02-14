@@ -1,8 +1,8 @@
-import type { GameDef, GameState } from '../../game/game'
-import { gameStateStore } from './stores/gameStores'
+import { gameStateStore } from './game'
 import type { CombatResult } from '../../game/combat'
 import { wait } from '../../game/utils'
 import { writable } from 'svelte/store'
+import type { GameDef, GameState } from '../../game/game'
 
 interface CombatReenactment {
   def: GameDef,
@@ -38,7 +38,7 @@ function finish(){
     return
   }
   store.set(undefined)
-  gameStateStore.newDay(currentReenactment.after)
+  gameStateStore.push(currentReenactment.after)
 }
 
 async function run(){

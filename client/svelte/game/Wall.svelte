@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { type GameInstance, wallHealth } from '../../../game/game'
-  export let gameInstance: GameInstance
+  import { wallHealth } from '../../../game/game'
+  import { gameInstanceStore } from '../../ts/game'
 </script>
 
 <div>
-  [{wallHealth(gameInstance)}]
+  [{wallHealth($gameInstanceStore)}]
 </div>
 
 <style>

@@ -1,7 +1,18 @@
-export type Team = 'player' | 'invader'
+const teams = {
+  player: true,
+  invader: true,
+} as const
 
-export const TeamTypes: Team[] = ['player','invader']
+export type Team = keyof typeof teams
 
-export function otherTeam(team: Team): Team{
+// @ts-expect-error -- It's fine
+const names: Team[] = Object.keys(teams)
+
+function otherTeam(team: Team): Team{
   return team === 'player' ? 'invader' : 'player'
+}
+
+export const gameTeam = {
+  otherTeam,
+  names,
 }

@@ -1,26 +1,15 @@
 <script lang="ts">
   import Army from './Army.svelte'
   import Wall from './Wall.svelte'
-  import { previewStateStore, gameStateStore, gameDefStore } from '../../ts/stores/gameStores'
-  import type { GameInstance } from '../../../game/game'
-
-  let gameInstance: GameInstance
-  $:{
-    const def = $gameDefStore
-    gameInstance = {
-      def,
-      state: $previewStateStore ?? $gameStateStore
-    }
-  }
 
 </script>
 
 <div>
-  <Wall {gameInstance}></Wall>
+  <Wall/>
   <span class="divider"/>
-  <Army {gameInstance} team='player'/>
+  <Army team='player'/>
   <span class="divider"/>
-  <Army {gameInstance} team='invader'/>
+  <Army team='invader'/>
 </div>
 
 <style>

@@ -1,20 +1,17 @@
 <script lang="ts">
-  import { gameStateStore } from '../../ts/stores/gameStores'
+  import { gameInstanceStore } from '../../ts/game'
   import { getUnitShopEntries, type UnitShopEntry } from '../../../game/shop'
-  import { performTransaction, transactionStore } from '../../ts/stores/transactionStore'
+  import { addChoice, performTransaction, setupAction, pendingActionStore } from '../../ts/pendingAction'
   import UnitShopEntryC from './UnitShopEntry.svelte'
+  import { buyUnitAction } from '../../../game/actions/buyUnitAction'
 
-  const unitShopEntries = getUnitShopEntries($gameStateStore)
+  const unitShopEntries = getUnitShopEntries($gameInstanceStore)
 
   function startTransaction(unitShopEntry: UnitShopEntry){
-    if($transactionStore?.data === unitShopEntry){
-      performTransaction()
+    if($pendingActionStore?.data === unitShopEntry){
+      addChoice()
     }else{
-      // TODO: Test if this transaction is valid
-      transactionStore.set({
-        type: 'unit',
-        data: unitShopEntry,
-      })
+      setupAction(buyUnitAction, unitShopEntry)
     }
   }
 

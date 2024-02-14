@@ -7,7 +7,6 @@
     "strict": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "sourceMap": true,
