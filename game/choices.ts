@@ -15,7 +15,7 @@ const CHOICE_VALIDATORS: Record<string, ValidatorFn> = {
     if(choice === 'auto'){
       return true
     }
-    if(isSlotNumber(choice) && choice <= playerArmy.length){
+    if(isSlotNumber(choice)){
       return true
     }
     return false

@@ -4,7 +4,7 @@ import { deepClone } from './utils'
 import type { StatName } from './stats'
 import { gameStats } from './stats'
 import { gameUnit } from './unit'
-import type { Choice, SpawnSlot } from './choices'
+import type { SpawnSlot } from './choices'
 
 const defs: Record<string, UnitDef> = {
   swordsman: {

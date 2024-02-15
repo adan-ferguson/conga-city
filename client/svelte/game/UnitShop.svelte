@@ -1,17 +1,20 @@
 <script lang="ts">
   import { gameInstanceStore } from '../../ts/game'
-  import { getUnitShopEntries, type UnitShopEntry } from '../../../game/shop'
-  import { addChoice, performTransaction, setupAction, pendingActionStore } from '../../ts/pendingAction'
+  import { gameShop, type UnitShopKey } from '../../../game/shop'
+  import { addChoice, setupAction, pendingActionStore } from '../../ts/pendingAction'
   import UnitShopEntryC from './UnitShopEntry.svelte'
-  import { buyUnitAction } from '../../../game/actions/buyUnitAction'
+  import { buyUnitAction } from '../../../game/actionDefs/buyUnitAction'
 
-  const unitShopEntries = getUnitShopEntries($gameInstanceStore)
+  const unitShopEntries = gameShop.getEntries($gameInstanceStore)
 
-  function startTransaction(unitShopEntry: UnitShopEntry){
-    if($pendingActionStore?.data === unitShopEntry){
-      addChoice()
+  function startTransaction(key: UnitShopKey){
+    if($pendingActionStore?.key === key){
+      addChoice('auto')
     }else{
-      setupAction(buyUnitAction, unitShopEntry)
+      const action = buyUnitAction($gameInstanceStore, key)
+      if(action){
+        setupAction(action, key)
+      }
     }
   }
 
@@ -21,7 +24,7 @@
   {#each Object.entries(unitShopEntries) as [key, unitShopEntry] (key)}
     <li class="flex-cols flex-centered">
       <UnitShopEntryC {unitShopEntry}/>
-      <button class='clickable-padded' on:click|stopPropagation={() => startTransaction(unitShopEntry)}>
+      <button class='clickable-padded' on:click|stopPropagation={() => startTransaction(unitShopEntry.key)}>
         Buy
       </button>
     </li>

@@ -40,9 +40,9 @@ const tests = {
     const game = blankGi()
     const def = buyUnitAction(game, 'archer')
     game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toInstanceDef)
-    tizzestMustError(() => {
-      gameActions.perform(<ActionDef>def, game, [7])
-    },'Slot number is too high.')
+    const result = gameActions.perform(<ActionDef>def, game, [7])
+    tizzest(result.stateAfter.armies.player.length === 4, '4th unit now')
+    tizzest(result.stateAfter.armies.player[3].def.name === 'Archer')
   },
 }
 

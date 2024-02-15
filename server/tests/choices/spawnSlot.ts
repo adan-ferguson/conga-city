@@ -1,5 +1,3 @@
-import { tizzest } from '../tizzest'
-
 const tests = {
 
 }

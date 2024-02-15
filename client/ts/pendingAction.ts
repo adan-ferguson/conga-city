@@ -8,11 +8,12 @@ import { type Choice, gameChoices } from '../../game/choices'
 type PendingAction = {
   actionDef: ActionDef,
   choices: Choice[],
+  key: string,
 }
 
 export const pendingActionStore = writable<PendingAction | undefined>(undefined)
 
-export function addChoice(choice: Choice | 'auto' = 'auto'){
+export function addChoice(choice: Choice){
   const pendingAction = get(pendingActionStore)
   if(!pendingAction){
     return
@@ -29,10 +30,11 @@ export function addChoice(choice: Choice | 'auto' = 'auto'){
   performOrUpdateStore(pendingAction)
 }
 
-export function setupAction(actionDef: ActionDef){
+export function setupAction(actionDef: ActionDef, key: string){
   const pendingAction: PendingAction = {
     actionDef,
     choices: [],
+    key,
   }
   performOrUpdateStore(pendingAction)
 }
