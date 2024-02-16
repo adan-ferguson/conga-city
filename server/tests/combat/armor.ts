@@ -9,10 +9,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: -5 }),
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(1, 1),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
@@ -22,10 +22,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 0 }),
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(1, 1),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
@@ -35,10 +35,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 1 }),
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(1, 3),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 2)
@@ -48,10 +48,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 2 }),
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(1, 3),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1)
@@ -61,10 +61,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(5, { armor: 6 }),
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(1, 3),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player[0].state.damage === 0)

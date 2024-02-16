@@ -13,7 +13,7 @@ const tests = {
       player: [],
       invader: [
         vanilla(5, 5),
-      ].map(gameUnit.toInstanceDef)
+      ].map(gameUnit.toSerializedUnitInstance)
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.wallDamage === 5, 'Wall dealt 5 damage')
@@ -23,10 +23,10 @@ const tests = {
     gi.state.armies = {
       player: [
         vanilla(4, 4)
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
       invader: [
         vanilla(5, 5)
-      ].map(gameUnit.toInstanceDef),
+      ].map(gameUnit.toSerializedUnitInstance),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.wallDamage === 0, 'No wall damage')

@@ -16,14 +16,14 @@ const tests = {
   },
   buyWithFullParty: () => {
     const game = blankGi()
-    game.state.armies.player = fillArray(8, () => vanilla(1)).map(gameUnit.toInstanceDef)
+    game.state.armies.player = fillArray(8, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
     const def = buyUnitAction(game, 'archer')
     tizzest(def === false, 'Buy unit action was invalid so should return false.')
   },
   buyWithAuto: () => {
     const game = blankGi()
     const def = buyUnitAction(game, 'archer')
-    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toInstanceDef)
+    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
     const result = gameActions.perform(<ActionDef>def, game, ['auto'])
     tizzest(result.stateAfter.armies.player.length === 4, '4th unit now')
     tizzest(result.stateAfter.armies.player[3].def.name === 'Archer')
@@ -31,7 +31,7 @@ const tests = {
   buyWithSlotNumber: () => {
     const game = blankGi()
     const def = buyUnitAction(game, 'archer')
-    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toInstanceDef)
+    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
     const result = gameActions.perform(<ActionDef>def, game, [1])
     tizzest(result.stateAfter.armies.player.length === 4, '2nd unit now')
     tizzest(result.stateAfter.armies.player[1].def.name === 'Archer')
@@ -39,7 +39,7 @@ const tests = {
   buyWithSlotNumberTooHigh: () => {
     const game = blankGi()
     const def = buyUnitAction(game, 'archer')
-    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toInstanceDef)
+    game.state.armies.player = fillArray(3, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
     const result = gameActions.perform(<ActionDef>def, game, [7])
     tizzest(result.stateAfter.armies.player.length === 4, '4th unit now')
     tizzest(result.stateAfter.armies.player[3].def.name === 'Archer')

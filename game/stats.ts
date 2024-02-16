@@ -2,6 +2,7 @@ export interface StatDef {
   integer ?: true,
   min ?: number,
   default ?: number,
+  max ?: number,
 }
 
 const DEFS: Record<string, StatDef> = {
@@ -9,6 +10,9 @@ const DEFS: Record<string, StatDef> = {
   hp: { integer: true, min: 1, default: 1 },
   price: { integer: true, min: 0 },
   armor: { integer: true, min: 0 },
+  size: { integer: true, min: 1, max: 3 },
+  attacks: { integer: true, min: 1 },
+  splash: { integer: true, min: 0 },
 }
 
 export type StatName = keyof typeof DEFS
@@ -19,6 +23,9 @@ function getValue(stats: Stats, statName: StatName): number{
   let val = stats[statName] ?? def.min ?? 0
   if (def.min !== undefined){
     val = Math.max(def.min, val)
+  }
+  if(def.max !== undefined){
+    val = Math.min(def.max, val)
   }
   if (def.integer){
     val = Math.round(val)

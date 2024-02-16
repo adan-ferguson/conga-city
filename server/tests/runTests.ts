@@ -12,6 +12,7 @@ export async function runTests(){
   fails = 0
   await runTestsInDir(__dirname)
   console.log(`Tests: ${passes}-${fails}`)
+  return fails === 0
 }
 
 async function runTestsInDir(dir: string, chain: string[] = []){

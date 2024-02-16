@@ -61,7 +61,7 @@ function getStatValue(use: UnitShopEntry, statName: StatName): number{
 function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SpawnSlot): GameState{
   const after = deepClone(game)
   const s = slot === 'auto' ? after.state.armies.player.length : slot
-  after.state.armies.player.splice(s, 0, gameUnit.toInstanceDef(use.def))
+  after.state.armies.player.splice(s, 0, gameUnit.toSerializedUnitInstance(use.def))
   return after.state
 }
 

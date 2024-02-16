@@ -1,10 +1,7 @@
 import type { GameInstance, SlotNumber } from './game'
+import { isSlotNumber } from './utils'
 
 type ValidatorFn = (g: GameInstance, c: Choice) => boolean
-
-function isSlotNumber(c: Choice): c is SlotNumber{
-  return typeof c === 'number' && Number.isInteger(c) && c >= 0 && c < 8
-}
 
 const CHOICE_VALIDATORS: Record<string, ValidatorFn> = {
   spawnSlot: (game, choice) => {

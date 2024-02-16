@@ -39,7 +39,7 @@ export function vanilla(hp: number, atkOrStats?: Stats | number, stats?: Stats):
 
 export function makeUnitInstance(unitDef: UnitDef): UnitInstance{
   const gi = blankGi()
-  gi.state.armies.player = [gameUnit.toInstanceDef(unitDef)]
+  gi.state.armies.player = [gameUnit.toSerializedUnitInstance(unitDef)]
   return gameGame.getInstance(gi, 'player', 0)!
 }
 

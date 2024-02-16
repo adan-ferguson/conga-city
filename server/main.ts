@@ -2,6 +2,9 @@ import { startServer } from './startServer'
 import { runTests } from './tests/runTests'
 
 export async function start(){
-  await runTests()
-  startServer()
+  if(await runTests()){
+    startServer()
+  }else{
+    console.log('Tests failed, server not started.')
+  }
 }

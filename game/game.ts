@@ -5,7 +5,7 @@ import { deepClone } from './utils'
 import { gameWall } from './wall'
 import { gameScenario } from './scenario'
 import { gameUnit } from './unit'
-import type { UnitInstance, UnitInstanceDef } from './unitInstance'
+import type { UnitInstance, SerializedUnitInstance } from './unitInstance'
 
 export type Team = 'player' | 'invader'
 
@@ -21,7 +21,7 @@ export type GameState = {
   wallDamage: number,
   actionsTaken: number,
   armies: {
-    [key in Team]: UnitInstanceDef[]
+    [key in Team]: SerializedUnitInstance[]
   }
 }
 
@@ -79,13 +79,13 @@ function unitInstances(game: GameInstance, team: Team): UnitInstance[]{
   return game.state.armies[team].map(uid => gameUnit.toInstance(uid, game, team))
 }
 
-function loadInvaderArmy(scenario: ScenarioName, week: number): UnitInstanceDef[]{
+function loadInvaderArmy(scenario: ScenarioName, week: number): SerializedUnitInstance[]{
   const def: Scenario = gameScenario.getInfo(scenario)
   const army = def.weeks[week - 1]?.army
   if(!army){
     throw 'No army!'
   }
-  return army.map(gameUnit.toInstanceDef)
+  return army.map(gameUnit.toSerializedUnitInstance)
 }
 
 function getInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
@@ -105,7 +105,7 @@ export const gameGame = {
   unitInstances,
   createNewInstance,
   getInstance,
-  isArmyFull(army: UnitInstanceDef[]){
+  isArmyFull(army: SerializedUnitInstance[]){
     return army.length === 8
   }
 }

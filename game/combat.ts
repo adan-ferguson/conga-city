@@ -1,9 +1,11 @@
 import type { GameInstance, GameState, SlotNumber, Team } from './game'
-import { deepClone } from './utils'
+import { deepClone, isSlotNumber } from './utils'
 import { gameTeam } from './team'
 import { gameWall } from './wall'
 import { gameUnitInstance, type UnitInstance } from './unitInstance'
 import { gameGame } from './game'
+import { gameAbilities } from './abilities'
+import { gameUnit } from './unit'
 
 type Target = UnitInstance | 'wall'
 
@@ -33,38 +35,50 @@ function resolve(g: GameInstance): CombatResult{
 
 function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNumber){
   const attacker = gameGame.getInstance(game, team, slot)
-  if(!attacker){
+  if(!attacker || gameUnitInstance.getStatValue(attacker, 'atk') === 0){
     return
   }
-  const target = getAttackTarget(attacker)
-  if(target === false){
-    return
-  }
-  const armor = target === 'wall' ? 0 : gameUnitInstance.getStatValue(target, 'armor')
-  const damage = Math.max(0, gameUnitInstance.getStatValue(attacker, 'atk') - armor)
-  atks.push({
-    attacker,
-    target,
-    damage,
+  const targets = getAttackTargets(attacker)
+  targets.forEach(target => {
+    const armor = target === 'wall' ? 0 : gameUnitInstance.getStatValue(target, 'armor')
+    const damage = Math.max(0, gameUnitInstance.getStatValue(attacker, 'atk') - armor)
+    atks.push({
+      attacker,
+      target,
+      damage,
+    })
   })
 }
 
-function getAttackTarget(attacker: UnitInstance): Target | false{
-  const range = 1 //getUnitInstanceStatValue(attacker, 'range')
-  const targetSlot = -gameUnitInstance.getSlot(attacker) + range - 1
-  if(targetSlot < 0){
-    return false
+function getAttackTargets(attacker: UnitInstance): Target[]{
+  if(gameUnitInstance.getSlot(attacker) > 0 && !gameAbilities.isRanged(attacker)){
+    return []
   }
+  const targetType = gameAbilities.targeting(attacker)
   const enemyArmy = attacker.game.state.armies[gameTeam.otherTeam(attacker.team)]
-  if(!enemyArmy.length){
+  if(!enemyArmy.length || targetType === 'wall'){
     if(attacker.team === 'player'){
-      return false
-    }else{
-      return 'wall'
+      return []
     }
+    return ['wall']
   }
-  const slot =  Math.min(enemyArmy.length - 1, targetSlot)
-  return gameGame.getInstance(attacker.game, gameTeam.otherTeam(attacker.team), slot as SlotNumber)!
+  if(targetType === 'normal'){
+    return toInstances(0)
+  }else if(targetType === 'back'){
+    return toInstances(enemyArmy.length - 1)
+  }else if(targetType === 'lowHp'){
+    throw 'Booo'
+  }
+  return []
+
+  function toInstances(...slots: number[]): UnitInstance[]{
+    return slots
+      .filter(s => isSlotNumber(s))
+      .map<UnitInstance | undefined>(s => {
+        return gameGame.getInstance(attacker.game, gameTeam.otherTeam(attacker.team), s as SlotNumber)
+      })
+      .filter<UnitInstance>((s): s is UnitInstance => !!s)
+  }
 }
 
 function resolveAttacks(atks: Attack[]){

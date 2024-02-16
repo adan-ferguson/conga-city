@@ -3,19 +3,19 @@ import type { GameInstance, Team } from './game'
 import { gameStats } from './stats'
 import type { UnitDef, UnitState } from './unit'
 
-export interface UnitInstanceDef {
+export interface SerializedUnitInstance {
   id: string,
   def: UnitDef,
   state: UnitState,
 }
 
-export interface UnitInstance extends UnitInstanceDef {
+export interface UnitInstance extends SerializedUnitInstance {
   game: GameInstance,
   team: Team,
 }
 
 function getSlot(ui: UnitInstance){
-  const slotIndex = ui.game.state.armies[ui.team].findIndex((uid: UnitInstanceDef) => uid.id === ui.id)
+  const slotIndex = ui.game.state.armies[ui.team].findIndex((uid: SerializedUnitInstance) => uid.id === ui.id)
   if(slotIndex === -1){
     throw 'Unit instance is not a slot in its own game...huh?'
   }
