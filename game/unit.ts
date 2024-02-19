@@ -11,7 +11,8 @@ export type UnitDef = {
 }
 
 export interface UnitState {
-  damage: number
+  damage: number,
+  destroyed?: boolean,
 }
 
 function toSerializedUnitInstance(unitDef: UnitDef): SerializedUnitInstance{

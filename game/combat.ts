@@ -1,11 +1,11 @@
 import type { GameInstance, GameState, SlotNumber, Team } from './game'
-import { deepClone, isSlotNumber } from './utils'
-import { gameTeam } from './team'
+import { deepClone } from './utils'
+import { TeamFns } from './team'
 import { gameWall } from './wall'
-import { gameUnitInstance, type UnitInstance } from './unitInstance'
+import { UnitInstanceFns, type UnitInstance } from './unitInstance'
 import { gameGame } from './game'
-import { gameAbilities } from './abilities'
-import { gameUnit } from './unit'
+import { AbilityFns } from './abilities'
+import { ArmyFns } from './army'
 
 type Target = UnitInstance | 'wall'
 
@@ -15,34 +15,45 @@ interface Attack {
   damage: number,
 }
 
+interface Attacks {
+  firstStrike: Attack[],
+  normal: Attack[],
+}
+
 export interface CombatResult {
   stateAfter: GameState,
 }
 
 function resolve(g: GameInstance): CombatResult{
   const game = deepClone(g)
-  const atks: Attack[] = []
+  const atks: Attacks = {
+    firstStrike: [],
+    normal: [],
+  }
   for(let j = 0; j < 8; j++){
     tryAttack(game, atks, 'player', j as SlotNumber)
     tryAttack(game, atks, 'invader', j as SlotNumber)
   }
-  resolveAttacks(atks)
+  resolveAttacks(atks.firstStrike)
+  removeDestroyedUnits(game)
+  resolveAttacks(atks.normal)
   removeDestroyedUnits(game)
   return {
     stateAfter: deepClone(game.state),
   }
 }
 
-function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNumber){
+function tryAttack(game: GameInstance, atks: Attacks, team: Team, slot: SlotNumber){
   const attacker = gameGame.getInstance(game, team, slot)
-  if(!attacker || gameUnitInstance.getStatValue(attacker, 'atk') === 0){
+  if(!attacker || UnitInstanceFns.getStatValue(attacker, 'atk') === 0){
     return
   }
   const targets = getAttackTargets(attacker)
   targets.forEach(target => {
-    const armor = target === 'wall' ? 0 : gameUnitInstance.getStatValue(target, 'armor')
-    const damage = Math.max(0, gameUnitInstance.getStatValue(attacker, 'atk') - armor)
-    atks.push({
+    const armor = target === 'wall' ? 0 : UnitInstanceFns.getStatValue(target, 'armor')
+    const damage = Math.max(0, UnitInstanceFns.getStatValue(attacker, 'atk') - armor)
+    const arr = AbilityFns.hasFirstStrike(attacker) ? atks.firstStrike : atks.normal
+    arr.push({
       attacker,
       target,
       damage,
@@ -51,38 +62,32 @@ function tryAttack(game: GameInstance, atks: Attack[], team: Team, slot: SlotNum
 }
 
 function getAttackTargets(attacker: UnitInstance): Target[]{
-  if(gameUnitInstance.getSlot(attacker) > 0 && !gameAbilities.isRanged(attacker)){
+  if(UnitInstanceFns.getSlot(attacker) > 0 && !AbilityFns.isRanged(attacker)){
     return []
   }
-  const targetType = gameAbilities.targeting(attacker)
-  const enemyArmy = attacker.game.state.armies[gameTeam.otherTeam(attacker.team)]
-  if(!enemyArmy.length || targetType === 'wall'){
+  const targetType = AbilityFns.targeting(attacker)
+  const enemyInstances = ArmyFns.getInstances(attacker.game, TeamFns.otherTeam(attacker.team))
+  if(!enemyInstances.length || targetType === 'wall'){
     if(attacker.team === 'player'){
       return []
     }
     return ['wall']
   }
   if(targetType === 'normal'){
-    return toInstances(0)
+    return [enemyInstances[0]]
   }else if(targetType === 'back'){
-    return toInstances(enemyArmy.length - 1)
+    return [enemyInstances.at(-1)!]
   }else if(targetType === 'lowHp'){
-    throw 'Booo'
+    return [ArmyFns.lowestHp(enemyInstances)]
   }
   return []
-
-  function toInstances(...slots: number[]): UnitInstance[]{
-    return slots
-      .filter(s => isSlotNumber(s))
-      .map<UnitInstance | undefined>(s => {
-        return gameGame.getInstance(attacker.game, gameTeam.otherTeam(attacker.team), s as SlotNumber)
-      })
-      .filter<UnitInstance>((s): s is UnitInstance => !!s)
-  }
 }
 
 function resolveAttacks(atks: Attack[]){
   atks.forEach(atk => {
+    if(atk.attacker.state.destroyed){
+      return
+    }
     dealDamage(
       atk.attacker,
       atk.target,
@@ -104,18 +109,22 @@ function takeWallDamage(game: GameInstance, damage: number){
 }
 
 function takeDamage(target: UnitInstance, damage: number){
-  target.state.damage = Math.min(gameUnitInstance.getStatValue(target, 'hp'), target.state.damage + damage)
+  target.state.damage = Math.min(UnitInstanceFns.getStatValue(target, 'hp'), target.state.damage + damage)
 }
 
 function removeDestroyedUnits(game: GameInstance){
-  for(const team of gameTeam.names){
+  for(const team of TeamFns.names){
     game.state.armies[team] = game.state.armies[team].filter(uid => {
       const ui: UnitInstance = {
         ...uid,
         game,
         team,
       }
-      return ui.state.damage < gameUnitInstance.getStatValue(ui, 'hp')
+      const destroyed = ui.state.damage >= UnitInstanceFns.getStatValue(ui, 'hp')
+      if(destroyed){
+        uid.state.destroyed = true
+      }
+      return !destroyed
     })
   }
 }

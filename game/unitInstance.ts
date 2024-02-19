@@ -17,7 +17,7 @@ export interface UnitInstance extends SerializedUnitInstance {
 function getSlot(ui: UnitInstance){
   const slotIndex = ui.game.state.armies[ui.team].findIndex((uid: SerializedUnitInstance) => uid.id === ui.id)
   if(slotIndex === -1){
-    throw 'Unit instance is not a slot in its own game...huh?'
+    throw 'Huh?'
   }
   return slotIndex
 }
@@ -30,7 +30,7 @@ function getHp(ui: UnitInstance){
   return getStatValue(ui, 'hp') - ui.state.damage
 }
 
-export const gameUnitInstance = {
+export const UnitInstanceFns = {
   getHp,
   getStatValue,
   getSlot,

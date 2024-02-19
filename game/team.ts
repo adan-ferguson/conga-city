@@ -12,7 +12,7 @@ function otherTeam(team: Team): Team{
   return team === 'player' ? 'invader' : 'player'
 }
 
-export const gameTeam = {
+export const TeamFns = {
   otherTeam,
   names,
 }
