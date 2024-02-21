@@ -12,7 +12,7 @@ const DEFS: Record<string, StatDef> = {
   armor: { integer: true, min: 0 },
   size: { integer: true, min: 1, max: 3 },
   attacks: { integer: true, min: 1 },
-  splash: { integer: true, min: 0 },
+  attackArea: { integer: true, min: 0, },
 }
 
 export type StatName = keyof typeof DEFS

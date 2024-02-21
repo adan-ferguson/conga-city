@@ -88,7 +88,7 @@ function loadInvaderArmy(scenario: ScenarioName, week: number): SerializedUnitIn
   return army.map(gameUnit.toSerializedUnitInstance)
 }
 
-function getInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
+function getUnitInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
   if(!game.state.armies[team][slot]){
     return undefined
   }
@@ -104,7 +104,7 @@ export const gameGame = {
   unitInstance,
   unitInstances,
   createNewInstance,
-  getInstance,
+  getUnitInstance,
   isArmyFull(army: SerializedUnitInstance[]){
     return army.length === 8
   }

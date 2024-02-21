@@ -40,11 +40,20 @@ export function vanilla(hp: number, atkOrStats?: Stats | number, stats?: Stats):
 export function makeUnitInstance(unitDef: UnitDef): UnitInstance{
   const gi = blankGi()
   gi.state.armies.player = [gameUnit.toSerializedUnitInstance(unitDef)]
-  return gameGame.getInstance(gi, 'player', 0)!
+  return gameGame.getUnitInstance(gi, 'player', 0)!
 }
 
 export function blankGi(){
   return gameGame.createNewInstance({
     scenario: 'blank'
   })
+}
+
+export function simCombat(playerArmy: UnitDef[] = [], invaderArmy: UnitDef[] = []){
+  const gi = blankGi()
+  gi.state.armies = {
+    player: playerArmy.map(gameUnit.toSerializedUnitInstance),
+    invader: invaderArmy.map(gameUnit.toSerializedUnitInstance),
+  }
+  return gameGame.endDay(gi)
 }

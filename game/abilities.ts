@@ -14,12 +14,8 @@ function combinedPassives(unit: UnitInstance){
   return unit.def.passives ?? {}
 }
 
-function isRanged(unit: UnitInstance): boolean{
-  return combinedPassives(unit).ranged === true
-}
-
-function hasFirstStrike(unit: UnitInstance): boolean{
-  return combinedPassives(unit).firstStrike === true
+function hasPassive(unit: UnitInstance, abilityName: keyof PassiveAbilities): boolean{
+  return combinedPassives(unit)[abilityName] === true
 }
 
 function targeting(unit: UnitInstance): TargetType{
@@ -27,7 +23,6 @@ function targeting(unit: UnitInstance): TargetType{
 }
 
 export const AbilityFns = {
-  isRanged,
   targeting,
-  hasFirstStrike,
+  hasPassive,
 }

@@ -18,7 +18,14 @@ function trampler(hp: number = 1): UnitDef{
 }
 
 const tests = {
-
+  trampleOverOne: () => {
+  },
+  trampleOverMany: () => {
+  },
+  trampleToWall: () => {
+  },
+  armoredTarget: () => {
+  },
 }
 
 export default tests
