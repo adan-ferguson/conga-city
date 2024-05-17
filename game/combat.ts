@@ -1,4 +1,4 @@
-import type { GameInstance, GameState, SlotNumber, Team } from './game'
+import type { GameInstance, GameState, Team } from './game'
 import { deepClone } from './utils'
 import { TeamFns } from './team'
 import { gameWall } from './wall'
@@ -6,6 +6,7 @@ import { UnitInstanceFns, type UnitInstance } from './unitInstance'
 import { gameGame } from './game'
 import { AbilityFns } from './abilities'
 import { ArmyFns, type Target } from './army'
+import type { AttackResult } from './result'
 
 interface Attack {
   attacker: UnitInstance,
@@ -30,30 +31,29 @@ interface DamageInfo {
   damage: number,
 }
 
-export interface CombatResult {
+interface CombatResolution {
   stateAfter: GameState,
+  results: Result[],
 }
 
-function resolve(g: GameInstance): CombatResult{
+export type Result = AttackResult
+
+function resolve(g: GameInstance): CombatResolution{
   const game = deepClone(g)
-  const atks: Attacks = {
-    firstStrike: [],
-    normal: [],
-  }
-  for(let j = 0; j < 8; j++){
-    tryAttack(game, atks, 'player', j as SlotNumber)
-    tryAttack(game, atks, 'invader', j as SlotNumber)
-  }
-  resolveAttacks(atks.firstStrike)
-  removeDestroyedUnits(game)
-  resolveAttacks(atks.normal)
-  removeDestroyedUnits(game)
+  const results: Result[] = []
+  const playerAttacks = calcAttacks(game, 'player')
+  const invaderAttacks = calcAttacks(game, 'invader')
+  results.push(...resolveAttacks([...playerAttacks.firstStrike, ...invaderAttacks.firstStrike]))
+  results.push(...removeDestroyedUnits(game))
+  results.push(...resolveAttacks([...playerAttacks.normal, ...invaderAttacks.normal]))
+  results.push(...removeDestroyedUnits(game))
   return {
     stateAfter: deepClone(game.state),
+    results,
   }
 }
 
-function tryAttack(game: GameInstance, atks: Attacks, team: Team, slot: SlotNumber){
+function calcAttacks(game: GameInstance, team: Team): Attacks{
   const attacker = gameGame.getUnitInstance(game, team, slot)
   if(!attacker || UnitInstanceFns.getStatValue(attacker, 'atk') === 0){
     return
@@ -93,7 +93,7 @@ function getAttackTarget(attacker: UnitInstance): Target | false{
   return slot
 }
 
-function resolveAttacks(atks: Attack[]){
+function resolveAttacks(atks: Attack[]): AttackResult[]{
   atks.forEach(atk => {
     if(atk.attacker.state.destroyed){
       return
@@ -103,7 +103,9 @@ function resolveAttacks(atks: Attack[]){
     let damageLeft = atk.damage
     let currentTarget: Target | false = atk.target
     // eslint-disable-next-line no-constant-condition
-    while(true){
+    let loopz = 0
+    while(loopz < 9){
+      loopz++
       const result = dealDamage(
         atk.attacker,
         currentTarget,
@@ -121,7 +123,11 @@ function resolveAttacks(atks: Attack[]){
         break
       }
     }
+    if(loopz >= 9){
+      throw 'Too many loops'
+    }
   })
+  return []
 }
 
 function attackerGameTeam(atkr: UnitInstance): [GameInstance, Team]{
@@ -191,6 +197,7 @@ function removeDestroyedUnits(game: GameInstance){
       return !destroyed
     })
   }
+  return []
 }
 
 export const gameCombat = {

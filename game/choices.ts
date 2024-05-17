@@ -1,4 +1,4 @@
-import type { GameInstance, SlotNumber } from './game'
+import type { GameInstance, Slot } from './game'
 import { isSlotNumber } from './utils'
 
 type ValidatorFn = (g: GameInstance, c: Choice) => boolean
@@ -23,12 +23,8 @@ const CHOICE_VALIDATORS: Record<string, ValidatorFn> = {
 }
 
 export type ChoiceType = keyof typeof CHOICE_VALIDATORS
-export type SpawnSlot = SlotNumber | 'auto'
-export type Choice = SpawnSlot | {
-  fruit: string,
-  count: number,
-  nonsense: boolean,
-}
+export type SpawnSlot = Slot | 'auto'
+export type Choice = SpawnSlot
 
 function isValid(game: GameInstance, choiceType: ChoiceType, choice: Choice): boolean{
   return CHOICE_VALIDATORS[choiceType](game, choice)

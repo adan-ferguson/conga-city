@@ -1,26 +1,25 @@
-import type { UnitDef } from '../../../game/unit'
-import { blankGi, vanilla } from '../utils'
-import { gameUnit } from '../../../game/unit'
-import { gameGame } from '../../../game/game'
+import { simCombat, vanilla } from '../utils'
 import { tizzest } from '../tizzest'
 
-function trampler(hp: number = 1): UnitDef{
-  return {
-    name: 'Striker',
-    stats: {
-      atk: 1,
-      hp,
-    },
-    passives: {
-      trample: true,
-    }
-  }
-}
-
 const tests = {
-  trampleOverOne: () => {
+  splashOne: () => {
+    const res = simCombat([
+      {
+        name: 'Splasher',
+        stats: {
+          atk: 1,
+          attackArea: 1,
+        }
+      }
+    ],[
+      vanilla(1),
+      vanilla(1),
+      vanilla(5),
+    ])
+    tizzest(res.stateAfter.armies.invader.length === 1)
+    tizzest(res.stateAfter.armies.invader[0].state.damage === 0)
   },
-  trampleOverMany: () => {
+  cleaveAll: () => {
   },
   trampleToWall: () => {
   },

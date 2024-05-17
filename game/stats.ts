@@ -5,7 +5,16 @@ export interface StatDef {
   max ?: number,
 }
 
-const DEFS: Record<string, StatDef> = {
+export type StatName =
+  'atk' |
+  'hp' |
+  'price' |
+  'armor' |
+  'size' |
+  'attacks' |
+  'attackArea'
+
+const DEFS: Record<StatName,StatDef> = {
   atk: { integer: true, min: 0 },
   hp: { integer: true, min: 1, default: 1 },
   price: { integer: true, min: 0 },
@@ -13,21 +22,22 @@ const DEFS: Record<string, StatDef> = {
   size: { integer: true, min: 1, max: 3 },
   attacks: { integer: true, min: 1 },
   attackArea: { integer: true, min: 0, },
-}
+} as const
 
-export type StatName = keyof typeof DEFS
-export type Stats = Record<StatName, number>
+export type Stats = {
+  [key in StatName]?: number
+}
 
 function getValue(stats: Stats, statName: StatName): number{
   const def = DEFS[statName]
   let val = stats[statName] ?? def.min ?? 0
-  if (def.min !== undefined){
+  if(def.min !== undefined){
     val = Math.max(def.min, val)
   }
   if(def.max !== undefined){
     val = Math.min(def.max, val)
   }
-  if (def.integer){
+  if(def.integer){
     val = Math.round(val)
   }
   return val

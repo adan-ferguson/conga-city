@@ -1,7 +1,5 @@
 import type { UnitDef } from '../../../game/unit'
-import { blankGi, simCombat, vanilla } from '../utils'
-import { gameUnit } from '../../../game/unit'
-import { gameGame } from '../../../game/game'
+import { simCombat, vanilla } from '../utils'
 import { tizzest } from '../tizzest'
 
 function piercer(atk: number = 1, passives = {}): UnitDef{

@@ -1,7 +1,7 @@
 import type { Stats } from './stats'
 import { uniqueID } from './utils'
 import type { UnitInstance, SerializedUnitInstance } from './unitInstance'
-import type { GameInstance, Team } from './game'
+import type { GameInstance, Slot, Team } from './game'
 import type { PassiveAbilities } from './abilities'
 
 export type UnitDef = {
@@ -12,11 +12,12 @@ export type UnitDef = {
 
 export interface UnitState {
   damage: number,
+  slot: Slot,
   destroyed?: boolean,
 }
 
-function toSerializedUnitInstance(unitDef: UnitDef): SerializedUnitInstance{
-  return { id: uniqueID(), def: unitDef, state: { damage: 0 } }
+function toSerializedUnitInstance(def: UnitDef, slot: Slot): SerializedUnitInstance{
+  return { id: uniqueID(), def, state: { damage: 0, slot, } }
 }
 
 function toInstance(uid: SerializedUnitInstance, game: GameInstance, team: Team): UnitInstance{

@@ -1,6 +1,5 @@
 import type { Scenario, ScenarioName } from './scenario'
-import type { CombatResult } from './combat'
-import { gameCombat } from './combat'
+import { gameCombat, type Result } from './combat'
 import { deepClone } from './utils'
 import { gameWall } from './wall'
 import { gameScenario } from './scenario'
@@ -9,7 +8,10 @@ import type { UnitInstance, SerializedUnitInstance } from './unitInstance'
 
 export type Team = 'player' | 'invader'
 
-export type SlotNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+export interface Slot {
+  row: number,
+  col: number,
+}
 
 export type GameDef = {
   scenario: ScenarioName
@@ -46,18 +48,18 @@ function createNewInstance(def: GameDef): GameInstance{
   }
 }
 
-function endDay(g: GameInstance): { stateAfter: GameState, result: CombatResult }{
+function endDay(g: GameInstance): { stateAfter: GameState, results: Result[] }{
   if(gameOver(g)){
     throw 'Could not end day'
   }
-  const result = gameCombat.resolve(g)
-  const stateAfter = deepClone(result.stateAfter)
+  const { stateAfter: combatStateAfter, results } = gameCombat.resolve(g)
+  const stateAfter = deepClone(combatStateAfter)
   // TODO: Cleanup
   if(stateAfter.day === 7){
     stateAfter.week += 1
   }
   stateAfter.day = 1 + (stateAfter.day % 7)
-  return { stateAfter, result }
+  return { stateAfter, results }
 }
 
 function gameOver(game: GameInstance): boolean{
