@@ -1,4 +1,4 @@
-import type { GameInstance, GameState, Team } from './game'
+import type { GameInstance, GameState, Slot, Team } from './game'
 import { deepClone } from './utils'
 import { TeamFns } from './team'
 import { gameWall } from './wall'
@@ -6,7 +6,6 @@ import { UnitInstanceFns, type UnitInstance } from './unitInstance'
 import { gameGame } from './game'
 import { AbilityFns } from './abilities'
 import { ArmyFns, type Target } from './army'
-import type { AttackResult } from './result'
 
 interface Attack {
   attacker: UnitInstance,
@@ -36,6 +35,10 @@ interface CombatResolution {
   results: Result[],
 }
 
+interface AttackResult {
+
+}
+
 export type Result = AttackResult
 
 function resolve(g: GameInstance): CombatResolution{
@@ -54,43 +57,49 @@ function resolve(g: GameInstance): CombatResolution{
 }
 
 function calcAttacks(game: GameInstance, team: Team): Attacks{
-  const attacker = gameGame.getUnitInstance(game, team, slot)
-  if(!attacker || UnitInstanceFns.getStatValue(attacker, 'atk') === 0){
-    return
+  const atks: Attacks = {
+    firstStrike: [],
+    normal: [],
   }
-  const target = getAttackTarget(attacker)
-  if(target === false){
-    return
-  }
-  const arr = AbilityFns.hasPassive(attacker, 'firstStrike') ? atks.firstStrike : atks.normal
-  arr.push({
-    attacker,
-    target,
-    damage: Math.max(0, UnitInstanceFns.getStatValue(attacker, 'atk')),
+  game.state.armies[team].forEach(sui => {
+    const attacker = UnitInstanceFns.toUnitInstance(sui, game, team)
+    if(UnitInstanceFns.getStatValue(attacker, 'atk') === 0){
+      return
+    }
+    getAttackTargets(attacker).forEach(target => {
+      const arr = AbilityFns.hasPassive(attacker, 'firstStrike') ? atks.firstStrike : atks.normal
+      arr.push({
+        attacker,
+        target,
+        damage: Math.max(0, UnitInstanceFns.getStatValue(attacker, 'atk')),
+      })
+    })
   })
+  return atks
 }
 
-function getAttackTarget(attacker: UnitInstance): Target | false{
-  if(UnitInstanceFns.getSlot(attacker) > 0 && !AbilityFns.hasPassive(attacker, 'ranged')){
-    return false
+function getAttackTargets(attacker: UnitInstance): Target[]{
+  if(attacker.state.slot.col > 0 && !AbilityFns.hasPassive(attacker, 'ranged')){
+    return []
   }
   const team = TeamFns.otherTeam(attacker.team)
   const targetType = AbilityFns.targeting(attacker)
   const enemyInstances = ArmyFns.getInstances(attacker.game, team)
-  let slot: SlotNumber | 'wall' | false = false
+  const row = attacker.state.slot.row
   if(!enemyInstances.length || targetType === 'wall'){
     if(attacker.team === 'player'){
-      return false
+      return []
     }
-    slot = 'wall'
+    return ['wall']
   }else if(targetType === 'normal'){
-    slot = 0
+    return [{ col: 0, row }]
   }else if(targetType === 'back'){
-    slot = enemyInstances.length - 1 as SlotNumber
+    return [{ col: 0, row }] // FIXME
   }else if(targetType === 'lowHp'){
-    slot = ArmyFns.lowestHp(enemyInstances)
+    const lhp = ArmyFns.lowestHp(enemyInstances)
+    return lhp ? [lhp.state.slot] : []
   }
-  return slot
+  return []
 }
 
 function resolveAttacks(atks: Attack[]): AttackResult[]{

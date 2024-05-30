@@ -90,12 +90,12 @@ function loadInvaderArmy(scenario: ScenarioName, week: number): SerializedUnitIn
   return army.map(gameUnit.toSerializedUnitInstance)
 }
 
-function getUnitInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
-  if(!game.state.armies[team][slot]){
+function getUnitInstance(game: GameInstance, team: Team, index: number): UnitInstance | undefined{
+  if(!game.state.armies[team][index]){
     return undefined
   }
   return {
-    ...game.state.armies[team][slot],
+    ...game.state.armies[team][index],
     game,
     team,
   }

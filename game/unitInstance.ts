@@ -30,8 +30,17 @@ function getHp(ui: UnitInstance){
   return getStatValue(ui, 'hp') - ui.state.damage
 }
 
+function toUnitInstance(sui: SerializedUnitInstance, game: GameInstance, team: Team): UnitInstance{
+  return {
+    ...sui,
+    game,
+    team,
+  }
+}
+
 export const UnitInstanceFns = {
   getHp,
   getStatValue,
   getSlot,
+  toUnitInstance,
 }
