@@ -1,8 +1,8 @@
 import type { Scenario } from '../scenario'
 
 const blank : Scenario = {
-  weeks: [{
-    army: []
+  days: [{
+    newUnits: []
   }]
 }
 

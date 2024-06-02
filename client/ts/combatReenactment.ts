@@ -1,14 +1,14 @@
 import { gameStateStore } from './game'
-import type { CombatResult } from '../../game/combat'
 import { wait } from '../../game/utils'
 import { writable } from 'svelte/store'
 import type { GameDef, GameState } from '../../game/game'
+import type { Result } from '../../game/combat'
 
 interface CombatReenactment {
   def: GameDef,
   before: GameState,
   after: GameState,
-  results: CombatResult[],
+  results: Result[],
 }
 
 let currentReenactment: CombatReenactment | null
@@ -31,7 +31,7 @@ function play(ce: CombatReenactment){
   run().then(finish)
 }
 
-const store = writable<CombatResult|undefined>(undefined)
+const store = writable<Result|undefined>(undefined)
 
 function finish(){
   if(!currentReenactment){

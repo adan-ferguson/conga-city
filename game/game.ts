@@ -3,8 +3,9 @@ import { gameCombat, type Result } from './combat'
 import { deepClone } from './utils'
 import { gameWall } from './wall'
 import { gameScenario } from './scenario'
-import { gameUnit } from './unit'
+import { UnitFns } from './unit'
 import type { UnitInstance, SerializedUnitInstance } from './unitInstance'
+import { ArmyFns } from './army'
 
 export type Team = 'player' | 'invader'
 
@@ -42,7 +43,7 @@ function createNewInstance(def: GameDef): GameInstance{
       actionsTaken: 0,
       armies: {
         player: [],
-        invader: loadInvaderArmy(def.scenario, 1),
+        invader: [],
       }
     }
   }
@@ -69,36 +70,20 @@ function gameOver(game: GameInstance): boolean{
   return false
 }
 
-function unitInstance(game: GameInstance, team: Team, slot: SlotNumber): UnitInstance | undefined{
-  const val = game.state.armies[team][slot]
-  if(!val){
-    return val
-  }
-  return gameUnit.toInstance(val, game, team)
+function unitInstance(game: GameInstance, team: Team, slot: Slot): UnitInstance | false{
+  return ArmyFns.getFromSlot(ArmyFns.getArmy(game, team), slot)
 }
 
 function unitInstances(game: GameInstance, team: Team): UnitInstance[]{
-  return game.state.armies[team].map(uid => gameUnit.toInstance(uid, game, team))
+  return game.state.armies[team].map(uid => UnitFns.toInstance(uid, game, team))
 }
 
-function loadInvaderArmy(scenario: ScenarioName, week: number): SerializedUnitInstance[]{
-  const def: Scenario = gameScenario.getInfo(scenario)
-  const army = def.weeks[week - 1]?.army
-  if(!army){
-    throw 'No army!'
+function musterInvaderArmy(game: GameInstance, scenario: ScenarioName, day: number): SerializedUnitInstance[]{
+  const dayInfo = gameScenario.getInfo(scenario).days[day]
+  if(!dayInfo || !dayInfo.newUnits){
+    return []
   }
-  return army.map(gameUnit.toSerializedUnitInstance)
-}
-
-function getUnitInstance(game: GameInstance, team: Team, index: number): UnitInstance | undefined{
-  if(!game.state.armies[team][index]){
-    return undefined
-  }
-  return {
-    ...game.state.armies[team][index],
-    game,
-    team,
-  }
+  return [] // TODO: this
 }
 
 export const gameGame = {
@@ -106,7 +91,6 @@ export const gameGame = {
   unitInstance,
   unitInstances,
   createNewInstance,
-  getUnitInstance,
   isArmyFull(army: SerializedUnitInstance[]){
     return army.length === 8
   }

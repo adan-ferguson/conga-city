@@ -1,11 +1,11 @@
-import { UnitInstanceFns, type UnitInstance, SerializedUnitInstance } from './unitInstance'
+import { UnitInstanceFns, type UnitInstance, type SerializedUnitInstance } from './unitInstance'
 import type { GameInstance, Slot, Team } from './game'
-import { gameUnit } from './unit'
+import { UnitFns } from './unit'
 
 export type Target = Slot | 'wall'
 
-function getInstances(game: GameInstance, team: Team): UnitInstance[]{
-  return game.state.armies[team].map(sui => gameUnit.toInstance(sui, game, team))
+function getArmy(game: GameInstance, team: Team): UnitInstance[]{
+  return game.state.armies[team].map(sui => UnitFns.toInstance(sui, game, team))
 }
 
 function nextTarget(game: GameInstance, team: Team, currentTarget: Target): Target | false{
@@ -13,19 +13,23 @@ function nextTarget(game: GameInstance, team: Team, currentTarget: Target): Targ
     return false
   }
   const nextTarget = { row: currentTarget.row, col: currentTarget.col + 1 }
-  if(!getFromSlot(game.state.armies[team], nextTarget)){
+  if(!getFromSlot(getArmy(game, team), nextTarget)){
     return team === 'player' ? 'wall' : false
   }
   return nextTarget
 }
 
-function getFromSlot(army: SerializedUnitInstance[], nextTarget: Slot): SerializedUnitInstance{
-  
+function getFromSlot<T extends SerializedUnitInstance>(army: T[], slot: Slot): T | false{
+  return army.find(sui => {
+    return sui.state.slot.col === slot.col &&
+      sui.state.slot.row === slot.row
+  }) ?? false
 }
 
 export const ArmyFns = {
-  getInstances,
+  getArmy,
   nextTarget,
+  getFromSlot,
   lowestHp(enemyInstances: UnitInstance[]): UnitInstance | false{
     if(!enemyInstances.length){
       return false

@@ -1,5 +1,4 @@
-import { blankGi, vanilla } from '../utils'
-import { gameUnit } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
 import { fillArray } from '../../../game/utils'
 import { tizzest } from '../tizzest'
 import { gameChoices } from '../../../game/choices'
@@ -7,23 +6,34 @@ import { gameChoices } from '../../../game/choices'
 const tests = {
   autoWithNotFilledArmy: () => {
     const game = blankGi()
-    game.state.armies.player = fillArray(2, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
+    game.state.armies.player = makeArmy(fillArray(2, () => vanilla(1)))
     tizzest(gameChoices.isValid(game, 'spawnSlot', 'auto'))
   },
   autoWithFilledArmy: () => {
     const game = blankGi()
-    game.state.armies.player = fillArray(8, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
+    game.state.armies.player = makeArmy(
+      fillArray(4, () => vanilla(1)),
+      fillArray(4, () => vanilla(1)),
+    )
     tizzest(!gameChoices.isValid(game, 'spawnSlot', 'auto'))
   },
-  slotWithNotFilledArmy: () => {
+  slotWithNotFilledRow: () => {
     const game = blankGi()
-    game.state.armies.player = fillArray(2, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
-    tizzest(gameChoices.isValid(game, 'spawnSlot', 1))
+    game.state.armies.player = makeArmy(fillArray(2, () => vanilla(1)))
+    tizzest(gameChoices.isValid(game, 'spawnSlot', {
+      row: 0,
+      col: 0,
+    }))
   },
-  slotWithFilledArmy: () => {
+  slotWithFilledRow: () => {
     const game = blankGi()
-    game.state.armies.player = fillArray(8, () => vanilla(1)).map(gameUnit.toSerializedUnitInstance)
-    tizzest(!gameChoices.isValid(game, 'spawnSlot', 1))
+    game.state.armies.player = makeArmy(
+      fillArray(4, () => vanilla(1)),
+    )
+    tizzest(!gameChoices.isValid(game, 'spawnSlot', {
+      row: 0,
+      col: 0,
+    }))
   }
 }
 

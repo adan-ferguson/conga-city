@@ -1,5 +1,5 @@
-import { blankGi, vanilla } from '../utils'
-import { gameUnit } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
+import { UnitFns } from '../../../game/unit'
 import { gameGame } from '../../../game/game'
 import { tizzest } from '../tizzest'
 
@@ -11,9 +11,9 @@ const tests = {
     const gi = blankGi()
     gi.state.armies = {
       player: [],
-      invader: [
+      invader: makeArmy([
         vanilla(5, 5),
-      ].map(gameUnit.toSerializedUnitInstance)
+      ])
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.wallDamage === 5, 'Wall dealt 5 damage')
@@ -21,12 +21,12 @@ const tests = {
   vanillaMeleeCombat: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         vanilla(4, 4)
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(5, 5)
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.wallDamage === 0, 'No wall damage')

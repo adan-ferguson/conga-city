@@ -28,7 +28,7 @@ function toInstance(uid: SerializedUnitInstance, game: GameInstance, team: Team)
   }
 }
 
-export const gameUnit = {
+export const UnitFns = {
   toSerializedUnitInstance,
   toInstance,
 }

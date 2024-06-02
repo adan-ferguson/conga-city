@@ -1,6 +1,6 @@
 import { v4 } from 'uuid'
-import type { SlotNumber } from './game'
 import type { Choice } from './choices'
+import type { Slot } from './game'
 
 export function deepClone<T>(obj: T): T{
   return JSON.parse(JSON.stringify(obj))
@@ -32,13 +32,6 @@ export function wait(ms: number){
   })
 }
 
-export function isSlotNumber(c: Choice | number): c is SlotNumber{
-  return typeof c === 'number' && Number.isInteger(c) && c >= 0 && c < 8
-}
-
-export function asSlotNumber(n: number): SlotNumber | false{
-  if(!isSlotNumber(n)){
-    return false
-  }
-  return n
+export function isSlot(c: Choice): c is Slot{
+  return typeof c === 'object' && 'row' in c && 'col' in c
 }

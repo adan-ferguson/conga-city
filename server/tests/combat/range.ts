@@ -1,7 +1,8 @@
-import { blankGi, vanilla } from '../utils'
-import { gameUnit, type UnitDef } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
+import { UnitFns, type UnitDef } from '../../../game/unit'
 import { gameGame } from '../../../game/game'
 import { tizzest } from '../tizzest'
+import { ArmyFns } from '../../../game/army'
 
 function ranger(passives = {}): UnitDef{
   return {
@@ -20,14 +21,14 @@ const tests = {
   standardRange: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         vanilla(5),
         ranger(),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(5),
         vanilla(5),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.invader[0].state.damage === 1, 'Front takes 1 damage.')

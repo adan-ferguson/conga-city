@@ -1,6 +1,6 @@
 import type { UnitDef } from '../../../game/unit'
-import { blankGi, vanilla } from '../utils'
-import { gameUnit } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
+import { UnitFns } from '../../../game/unit'
 import { gameGame } from '../../../game/game'
 import { tizzest } from '../tizzest'
 
@@ -21,12 +21,12 @@ const tests = {
   meleeFirstStrikeKill: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         striker(),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(1, 1),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.player[0].state.damage === 0, 'Player took no damage.')
@@ -35,12 +35,12 @@ const tests = {
   meleeFirstStrikeTrade: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         striker(1),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         striker(1),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.player.length === 0, 'Player is dead.')
@@ -49,12 +49,12 @@ const tests = {
   meleeFirstStrikeNoKill: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         striker(2)
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         striker(2)
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.player[0].state.damage === 1, 'Player took 1 damage.')
@@ -63,13 +63,13 @@ const tests = {
   meleeFirstStrikeNoShift: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         striker()
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(1, 1),
         vanilla(1, 1),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.player[0].state.damage === 0, 'Player took no damage.')

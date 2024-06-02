@@ -8,3 +8,5 @@ export async function start(){
     console.log('Tests failed, server not started.')
   }
 }
+
+void start()

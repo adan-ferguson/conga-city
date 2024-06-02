@@ -1,6 +1,6 @@
 import type { UnitDef } from '../../../game/unit'
-import { gameUnit } from '../../../game/unit'
-import { blankGi, vanilla } from '../utils'
+import { UnitFns } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
 import { gameGame } from '../../../game/game'
 import { tizzest } from '../tizzest'
 
@@ -21,13 +21,13 @@ const tests = {
   trampleOverOne: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         trampler(4)
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(1),
         vanilla(4),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.invader.length === 1)
@@ -36,15 +36,15 @@ const tests = {
   trampleOverMany: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         trampler(4)
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(1),
         vanilla(1),
         vanilla(1),
         vanilla(1),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.invader.length === 0)
@@ -52,12 +52,12 @@ const tests = {
   trampleToWall: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         vanilla(1),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         trampler(4)
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.wallDamage === 3)
@@ -65,10 +65,10 @@ const tests = {
   armoredTarget: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         trampler(4),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         {
           name: 'Armored',
           stats: {
@@ -77,7 +77,7 @@ const tests = {
           }
         },
         vanilla(1),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.invader.length === 2)
@@ -87,17 +87,17 @@ const tests = {
   trampleWithBackTarget: () => {
     const gi = blankGi()
     gi.state.armies = {
-      player: [
+      player: makeArmy([
         vanilla(1),
         vanilla(1),
         vanilla(1),
         vanilla(1),
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         trampler(4, {
           target: 'back',
         })
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(gi)
     tizzest(res.stateAfter.armies.player.length === 3)

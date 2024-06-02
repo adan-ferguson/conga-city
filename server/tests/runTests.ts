@@ -22,7 +22,7 @@ async function runTestsInDir(dir: string, chain: string[] = []){
     const isDir = (await lstat(fullPath)).isDirectory()
     if(isDir){
       await runTestsInDir(fullPath, [...chain, file])
-    }else if(chain.length > 0 && path.extname(file) === '.js'){
+    }else if(chain.length > 0 && path.extname(file) === '.ts'){
       const chainPath = path.join(...chain, file)
       const js = await import('./' + chainPath)
       const obj = js.default

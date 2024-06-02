@@ -3,11 +3,11 @@ import { test } from './scenarios/test'
 import type { UnitDef } from './unit'
 
 export interface Scenario {
-  weeks: ScenarioWeek[],
+  days: ScenarioDay[],
 }
 
-export interface ScenarioWeek {
-  army: UnitDef[]
+export interface ScenarioDay {
+  newUnits: UnitDef[]
 }
 
 const Scenarios: Record<string,Scenario> = {

@@ -13,8 +13,8 @@ function soldier(){
 }
 
 const test : Scenario = {
-  weeks: [{
-    army: fillArray<UnitDef>(8, () => soldier())
+  days: [{
+    newUnits: fillArray<UnitDef>(8, () => soldier())
   }]
 }
 

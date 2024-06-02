@@ -1,5 +1,5 @@
-import { blankGi, vanilla } from '../utils'
-import { gameUnit, type UnitDef } from '../../../game/unit'
+import { blankGi, makeArmy, vanilla } from '../utils'
+import { UnitFns, type UnitDef } from '../../../game/unit'
 import { gameGame } from '../../../game/game'
 import { tizzest } from '../tizzest'
 import type { TargetType } from '../../../game/abilities'
@@ -20,13 +20,13 @@ const tests = {
   backTarget: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         t('back')
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(5),
         vanilla(5),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.invader[0].state.damage === 0, 'Front takes 0 damage.')
@@ -35,14 +35,14 @@ const tests = {
   lowHp: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         t('lowHp')
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         vanilla(5),
         vanilla(4),
         vanilla(5),
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.armies.invader[1].state.damage === 1, 'Front takes 0 damage.')
@@ -50,12 +50,12 @@ const tests = {
   wall: () => {
     const game = blankGi()
     game.state.armies = {
-      player: [
+      player: makeArmy([
         t('wall')
-      ].map(gameUnit.toSerializedUnitInstance),
-      invader: [
+      ]),
+      invader: makeArmy([
         t('wall')
-      ].map(gameUnit.toSerializedUnitInstance),
+      ]),
     }
     const res = gameGame.endDay(game)
     tizzest(res.stateAfter.wallDamage === 1, 'Wall hit.')

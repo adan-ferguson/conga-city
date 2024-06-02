@@ -1,10 +1,12 @@
 import type { UnitDef } from './unit'
-import type { GameInstance, GameState } from './game'
+import type { GameInstance, GameState, Slot } from './game'
 import { deepClone } from './utils'
 import type { StatName } from './stats'
 import { gameStats } from './stats'
-import { gameUnit } from './unit'
+import { UnitFns } from './unit'
 import type { SpawnSlot } from './choices'
+import type { SerializedUnitInstance } from './unitInstance'
+import { ArmyFns } from './army'
 
 const defs: Record<string, UnitDef> = {
   swordsman: {
@@ -60,9 +62,23 @@ function getStatValue(use: UnitShopEntry, statName: StatName): number{
 
 function buyUnit(game: GameInstance, use: UnitShopEntry, slot: SpawnSlot): GameState{
   const after = deepClone(game)
-  const s = slot === 'auto' ? after.state.armies.player.length : slot
-  after.state.armies.player.splice(s, 0, gameUnit.toSerializedUnitInstance(use.def))
+  const s = slot === 'auto' ? autoSlot(after.state.armies.player) : slot
+  if(!s){
+    throw 'Could not buy, no slots'
+  }
+  after.state.armies.player.push(UnitFns.toSerializedUnitInstance(use.def, s))
   return after.state
+}
+
+function autoSlot(army: SerializedUnitInstance[]): Slot | false{
+  for(let col = 0; col < 4; col++){
+    for(let row = 0; row < 2; row++){
+      if(!ArmyFns.getFromSlot(army, { col, row })){
+        return { col, row }
+      }
+    }
+  }
+  return false
 }
 
 function getEntry(game: GameInstance, key: UnitShopKey): UnitShopEntry{

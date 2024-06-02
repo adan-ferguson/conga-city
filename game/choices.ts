@@ -1,5 +1,5 @@
 import type { GameInstance, Slot } from './game'
-import { isSlotNumber } from './utils'
+import { isSlot } from './utils'
 
 type ValidatorFn = (g: GameInstance, c: Choice) => boolean
 
@@ -12,7 +12,7 @@ const CHOICE_VALIDATORS: Record<string, ValidatorFn> = {
     if(choice === 'auto'){
       return true
     }
-    if(isSlotNumber(choice)){
+    if(isSlot(choice)){
       return true
     }
     return false

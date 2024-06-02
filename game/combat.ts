@@ -1,4 +1,4 @@
-import type { GameInstance, GameState, Slot, Team } from './game'
+import type { GameInstance, GameState, Team } from './game'
 import { deepClone } from './utils'
 import { TeamFns } from './team'
 import { gameWall } from './wall'
@@ -6,6 +6,7 @@ import { UnitInstanceFns, type UnitInstance } from './unitInstance'
 import { gameGame } from './game'
 import { AbilityFns } from './abilities'
 import { ArmyFns, type Target } from './army'
+import { UnitFns } from './unit'
 
 interface Attack {
   attacker: UnitInstance,
@@ -36,7 +37,7 @@ interface CombatResolution {
 }
 
 interface AttackResult {
-
+  stateAfter: GameState,
 }
 
 export type Result = AttackResult
@@ -62,7 +63,7 @@ function calcAttacks(game: GameInstance, team: Team): Attacks{
     normal: [],
   }
   game.state.armies[team].forEach(sui => {
-    const attacker = UnitInstanceFns.toUnitInstance(sui, game, team)
+    const attacker = UnitFns.toInstance(sui, game, team)
     if(UnitInstanceFns.getStatValue(attacker, 'atk') === 0){
       return
     }
@@ -84,7 +85,7 @@ function getAttackTargets(attacker: UnitInstance): Target[]{
   }
   const team = TeamFns.otherTeam(attacker.team)
   const targetType = AbilityFns.targeting(attacker)
-  const enemyInstances = ArmyFns.getInstances(attacker.game, team)
+  const enemyInstances = ArmyFns.getArmy(attacker.game, team)
   const row = attacker.state.slot.row
   if(!enemyInstances.length || targetType === 'wall'){
     if(attacker.team === 'player'){
@@ -123,7 +124,7 @@ function resolveAttacks(atks: Attack[]): AttackResult[]{
       if(!trample){
         break
       }
-      currentTarget = ArmyFns.nextTarget(...attackerGameTeam(atkr), currentTarget)
+      currentTarget = ArmyFns.nextTarget(...agot(atkr), currentTarget)
       if(!currentTarget){
         break
       }
@@ -139,7 +140,8 @@ function resolveAttacks(atks: Attack[]): AttackResult[]{
   return []
 }
 
-function attackerGameTeam(atkr: UnitInstance): [GameInstance, Team]{
+function agot(atkr: UnitInstance): [GameInstance, Team]{
+  // attacker's game/otherTeam
   return [atkr.game, TeamFns.otherTeam(atkr.team)]
 }
 
@@ -147,7 +149,7 @@ function dealDamage(attacker: UnitInstance, target: Target, damage: number): Dam
   if(target === 'wall'){
     return takeWallDamage(attacker.game, damage)
   }else{
-    const dmgTaker = gameGame.getUnitInstance(...attackerGameTeam(attacker), target)
+    const dmgTaker = ArmyFns.getFromSlot(ArmyFns.getArmy(...agot(attacker)), target)
     if(!dmgTaker){
       return {
         blocked: 0,
